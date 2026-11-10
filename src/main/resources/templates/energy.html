@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Energy Security | SmartCity360</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; color: #192942; background: #f1f5f9; }
+    header { background: #142d4e; color: white; padding: 25px max(20px, calc((100% - 980px) / 2)); }
+    header a { color: #b9d9ff; text-decoration: none; font-size: .92rem; }
+    main { max-width: 1000px; margin: 28px auto; padding: 0 20px 35px; }
+    .tag { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: #6583a6; font-weight: 750; }
+    .intro { color: #475569; line-height: 1.7; }
+    .panel { background: white; padding: 26px; border-radius: 16px; border: 1px solid #e3e9f2; box-shadow: 0 7px 25px #1e293b0a; margin: 18px 0; }
+    .field { display: block; font-weight: 650; margin-bottom: 9px; }
+    textarea { display:block; width:100%; min-height: 100px; font: inherit; resize: vertical; padding: 13px; border: 1px solid #b7c4d7; border-radius: 9px; }
+    textarea:focus { outline: 2px solid #93c5fd; }
+    .options { display: flex; flex-wrap: wrap; gap: 14px; margin: 18px 0; }
+    .options label { display: flex; gap: 8px; align-items: center; padding: 12px 14px; border: 1px solid #d5e3f1; background: #f8fbff; border-radius: 9px; font-weight: 600; cursor: pointer; }
+    button { background: #1d4ed8; color: white; border: 0; padding: 12px 20px; font: inherit; font-weight: 700; border-radius: 9px; cursor: pointer; }
+    button:hover { background: #1e40af; }
+    .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .results > div { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; overflow-wrap: anywhere; }
+    .full { grid-column: 1 / -1; }
+    .success { color: #166534; font-weight: 750; }
+    .error { color: #b91c1c; font-weight: 750; }
+    code { display:block; white-space:pre-wrap; overflow-wrap:anywhere; font-size: .85rem; margin-top: 8px; }
+    small { color: #64748b; }
+  </style>
+</head>
+<body>
+<header>
+  <a href="/">← Back to SmartCity360 dashboard</a>
+  <h1>Part A · Energy Data Security</h1>
+  <p>Decorator Design Pattern — Layered meter data protection</p>
+</header>
+<main>
+  <div class="panel">
+    <div class="tag">Assignment Part A</div>
+    <h2>Protect a smart meter reading</h2>
+    <p class="intro">Select any combination of decorators. The original data-stream class stays unchanged while the selected layers wrap it dynamically.</p>
+    <form action="/energy/process" method="post">
+      <label class="field" for="reading">Meter reading</label>
+      <textarea id="reading" name="reading" maxlength="500" required th:text="${reading}"></textarea>
+      <div class="options">
+        <label><input type="checkbox" name="compress" value="true" th:checked="${compress}"> Compression (GZIP)</label>
+        <label><input type="checkbox" name="encrypt" value="true" th:checked="${encrypt}"> Encryption (AES-GCM)</label>
+        <label><input type="checkbox" name="authenticate" value="true" th:checked="${authenticate}"> Authentication (HMAC)</label>
+      </div>
+      <button type="submit">Process meter data</button>
+    </form>
+  </div>
+  <div class="panel" th:if="${error}">
+    <p class="error" th:text="${error}"></p>
+  </div>
+  <div class="panel" th:if="${encoded != null}">
+    <h2>Security pipeline result</h2>
+    <div class="results">
+      <div class="full"><strong>Encoded payload (Base64 for display)</strong><code th:text="${encoded}"></code></div>
+      <div><strong>Decoded meter reading</strong><p th:text="${decoded}"></p></div>
+      <div><strong>Input size</strong><p><span th:text="${inputBytes}"></span> bytes</p></div>
+      <div><strong>Output size</strong><p><span th:text="${outputBytes}"></span> bytes</p></div>
+      <div><strong>Tampering test</strong><p th:if="${encrypt or authenticate}" th:class="${tamperRejected} ? 'success' : 'error'" th:text="${tamperRejected} ? 'Tampered data rejected' : 'NOT rejected — investigate'"></p><p th:unless="${encrypt or authenticate}">Not applicable without integrity protection</p></div>
+    </div>
+    <p><small>Educational demonstration only. The keys exist in memory for a single request; do not use with real infrastructure or personal data.</small></p>
+  </div>
+</main>
+</body>
+</html>
