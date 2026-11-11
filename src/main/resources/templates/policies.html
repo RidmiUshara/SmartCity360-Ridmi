@@ -23,8 +23,12 @@
         .match { color:#15803d; font-weight:700; }
         .no-match { color:#64748b; }
     </style>
+  <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+  <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
 </head>
 <body>
+<div th:replace="~{fragments/navigation :: sidebar('policies')}"></div>
+<div class="workspace">
 <header><a href="/">← Dashboard</a><h1>City Policy Rule Interpreter</h1><p>Part E · Interpreter Design Pattern</p></header>
 <main>
     <section class="panel">
@@ -73,5 +77,6 @@
     </section>
     <p class="muted">Educational simulation only: actions are displayed, not performed. Rules are stored in memory until restart.</p>
 </main>
+</div>
 </body>
 </html>

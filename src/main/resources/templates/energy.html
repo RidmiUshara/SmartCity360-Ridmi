@@ -29,8 +29,12 @@
     code { display:block; white-space:pre-wrap; overflow-wrap:anywhere; font-size: .85rem; margin-top: 8px; }
     small { color: #64748b; }
   </style>
+  <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+  <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
 </head>
 <body>
+<div th:replace="~{fragments/navigation :: sidebar('energy')}"></div>
+<div class="workspace">
 <header>
   <a href="/">← Back to SmartCity360 dashboard</a>
   <h1>Part A · Energy Data Security</h1>
@@ -67,5 +71,6 @@
     <p><small>Educational demonstration only. The keys exist in memory for a single request; do not use with real infrastructure or personal data.</small></p>
   </div>
 </main>
+</div>
 </body>
 </html>

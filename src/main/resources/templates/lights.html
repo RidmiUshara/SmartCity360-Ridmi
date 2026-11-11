@@ -22,8 +22,12 @@
         .active { color:#15803d; font-weight:700; }
         .inactive { color:#b91c1c; font-weight:700; }
     </style>
+  <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+  <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
 </head>
 <body>
+<div th:replace="~{fragments/navigation :: sidebar('lights')}"></div>
+<div class="workspace">
 <header>
     <a href="/">← Dashboard</a>
     <h1>Smart Street Light Management</h1>
@@ -56,5 +60,6 @@
     </section>
     <p class="muted">This educational simulation demonstrates object reuse, not a measured JVM heap saving. State resets after restart.</p>
 </main>
+</div>
 </body>
 </html>

@@ -76,9 +76,13 @@
 
         a { color: #bfdbfe; }
     </style>
+  <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+  <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
 </head>
 
 <body>
+<div th:replace="~{fragments/navigation :: sidebar('zones')}"></div>
+<div class="workspace">
 <header>
     <h1>Smart City Zone Management</h1>
     <p>Part B - Composite Design Pattern</p>
@@ -140,5 +144,6 @@
         </table>
     </div>
 </main>
+</div>
 </body>
 </html>

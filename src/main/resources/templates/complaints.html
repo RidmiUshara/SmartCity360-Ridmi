@@ -21,8 +21,12 @@
         .badge { display: inline-block; background: #dbeafe; padding: 4px 9px; border-radius: 20px; font-size: .85rem; font-weight: 650; }
         .route { overflow-wrap: anywhere; color: #475569; font-size: .95rem; }
     </style>
+  <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+  <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
 </head>
 <body>
+<div th:replace="~{fragments/navigation :: sidebar('complaints')}"></div>
+<div class="workspace">
 <header>
     <a href="/">← Dashboard</a>
     <h1>Citizen Complaint Escalation</h1>
@@ -62,5 +66,6 @@
     </section>
     <p class="hint">Classroom simulation: complaint data is kept in memory and disappears when the application restarts.</p>
 </main>
+</div>
 </body>
 </html>
