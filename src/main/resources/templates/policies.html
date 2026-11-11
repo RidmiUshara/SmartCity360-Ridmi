@@ -1,71 +1,16 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>City Policy Studio | SmartCity360</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
-    <link rel="stylesheet" th:href="@{/css/operations.css}" href="/css/operations.css">
-    <link rel="stylesheet" th:href="@{/css/service-pages.css}" href="/css/service-pages.css">
-    <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
-</head>
-<body>
-<div th:replace="~{fragments/navigation :: sidebar('policies')}"></div>
-<div class="workspace">
-    <div th:replace="~{fragments/navigation :: topbar('policies')}"></div>
-    <main class="service-main">
-        <div class="service-heading">
-            <div><span class="eyebrow">CITY OPERATIONS / POLICIES</span><h1>City Policy Studio</h1><p>Create, test and manage intelligent city management rules.</p></div>
-            <a class="service-back" href="/">View overview <span aria-hidden="true">↗</span></a>
-        </div>
-
-        <div class="service-stats">
-            <div class="service-stat"><span>ACTIVE POLICY RULES</span><strong th:text="${#lists.size(rules)}">3</strong><small>Rules configured in this session</small></div>
-            <div class="service-stat"><span>RULE ENGINE</span><strong>Condition based</strong><small>Supports AND, OR, NOT and comparisons</small></div>
-            <div class="service-stat"><span>EXECUTION</span><strong>Preview only</strong><small>Actions are not automatically executed</small></div>
-        </div>
-        <div class="service-columns">
-            <section class="service-panel">
-                <div class="service-panel-header"><div><span class="panel-label">SENSOR RULE TESTER</span><h2>Evaluate city conditions</h2><p>Change a set of sensor readings to see which rules match.</p></div><span class="panel-header-icon">◇</span></div>
-                <form action="/policies/evaluate" method="post" class="service-form">
-                    <div class="form-grid">
-                        <div><label for="noise">Noise level · dB</label><input type="number" step="any" id="noise" name="noise" required th:value="${noise != null ? noise : 80}"></div>
-                        <div><label for="hour">Hour · 0–23</label><input type="number" step="any" min="0" max="23" id="hour" name="hour" required th:value="${hour != null ? hour : 23}"></div>
-                        <div><label for="occupancy">Occupancy · %</label><input type="number" step="any" id="occupancy" name="occupancy" required th:value="${occupancy != null ? occupancy : 50}"></div>
-                        <div><label for="parkedMinutes">Parking duration · min</label><input type="number" step="any" id="parkedMinutes" name="parkedMinutes" required th:value="${parkedMinutes != null ? parkedMinutes : 135}"></div>
-                    </div>
-                    <button type="submit" class="primary-action">Evaluate policies <span aria-hidden="true">→</span></button>
-                </form>
-                <div class="rule-result-list" th:if="${results != null}">
-                    <h3>Evaluation results</h3>
-                    <div class="rule-result" th:each="result : ${results}">
-                        <strong th:text="${result.rule.name}">Policy name</strong>
-                        <span class="result-tag" th:classappend="${result.matched} ? ' is-match' : ''" th:text="${result.matched ? result.rule.action : 'No match'}">No match</span>
-                    </div>
-                </div>
-            </section>
-            <section class="service-panel">
-                <div class="service-panel-header"><div><span class="panel-label">RULE BUILDER</span><h2>Create policy rule</h2><p>Define a condition and preview its corresponding action.</p></div><span class="panel-header-icon">＋</span></div>
-                <div class="service-error" th:if="${error}" th:text="${error}"></div>
-                <form action="/policies/add" method="post" class="service-form">
-                    <label for="name">Policy name</label><input id="name" name="name" maxlength="80" required th:value="${name}" placeholder="e.g. After-hours noise">
-                    <label for="source">Rule expression</label><textarea name="source" id="source" maxlength="256" rows="4" required th:text="${source}" placeholder="WHEN noise > 70 AND hour >= 22 THEN ALERT"></textarea>
-                    <div class="dsl-guide"><strong>Example rule</strong><code>WHEN noise &gt; 70 AND hour &gt;= 22 THEN ALERT</code><span>Metrics: noise, hour, occupancy, parkedMinutes<br>Actions: ALERT, ISSUE_FINE, LOG</span></div>
-                    <button class="primary-action" type="submit">Save policy rule <span aria-hidden="true">→</span></button>
-                </form>
-            </section>
-        </div>
-        <section class="service-panel">
-            <div class="service-panel-header"><div><span class="panel-label">POLICY LIBRARY</span><h2>Configured rules</h2><p>Review and remove conditions from the current workspace.</p></div></div>
-            <div class="policy-library">
-                <article class="policy-row" th:each="rule : ${rules}">
-                    <div class="policy-row-icon">◇</div><div class="policy-row-body"><strong th:text="${rule.name}">Rule</strong><code th:text="${rule.source}">WHEN noise &gt; 70 THEN ALERT</code></div>
-                    <form action="/policies/remove" method="post"><input type="hidden" name="id" th:value="${rule.id}"><button type="submit" class="table-action danger">Remove</button></form>
-                </article>
-            </div>
-        </section>
-        <div class="service-info-strip"><span>ⓘ</span> Actions are previews only. No real fines, alerts or infrastructure changes occur. Rules reset after restart.</div>
-    </main>
-</div>
-</body>
-</html>
+<!DOCTYPE html><html lang="en" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>City Policy Studio | SmartCity360</title><link rel="stylesheet" th:href="@{/css/app.css}"><link rel="stylesheet" th:href="@{/css/operations.css}"><script th:src="@{/js/app.js}" defer></script></head><body><div th:replace="~{fragments/navigation :: sidebar('policies')}"></div><div class="workspace"><div th:replace="~{fragments/navigation :: topbar('policies')}"></div><main class="ops-page"><div class="ops-header"><div><span class="ops-eyebrow">URBAN AUTOMATION · RULE MANAGEMENT</span><h1>City Policy Studio</h1><p>Evaluate operational conditions and create your own automated policy previews.</p></div><span class="ops-demo">● Demo workspace</span></div>
+<div class="ops-stats"><section class="ops-stat"><small>Active policy definitions</small><strong th:text="${#lists.size(rules)}">3</strong><p>Rules stored this session</p></section><section class="ops-stat"><small>Input conditions</small><strong>4</strong><p>Noise · Hour · Occupancy · Parking</p></section><section class="ops-stat"><small>Supported outcomes</small><strong>3</strong><p>ALERT · ISSUE_FINE · LOG</p></section></div>
+<div class="ops-columns"><section class="ops-panel"><h2>Policy evaluation console</h2><p>Provide city readings to check which saved policies would trigger.</p><form action="/policies/evaluate" method="post">
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+<div class="ops-field"><label for="noise">Noise level (dB)</label><input id="noise" name="noise" type="number" step="any" required th:value="${noise != null ? noise : 80}"></div>
+<div class="ops-field"><label for="hour">Hour (0–23)</label><input id="hour" name="hour" type="number" step="any" min="0" max="23" required th:value="${hour != null ? hour : 23}"></div>
+<div class="ops-field"><label for="occupancy">Occupancy (%)</label><input id="occupancy" name="occupancy" type="number" step="any" required th:value="${occupancy != null ? occupancy : 50}"></div>
+<div class="ops-field"><label for="parkedMinutes">Parking duration (min)</label><input id="parkedMinutes" name="parkedMinutes" type="number" step="any" required th:value="${parkedMinutes != null ? parkedMinutes : 135}"></div></div><button class="ops-action" type="submit">Run policy evaluation →</button></form>
+<div th:if="${results != null}"><h2 style="margin-top:25px">Evaluation results</h2><div class="ops-rule" th:each="result : ${results}"><div><strong th:text="${result.rule.name}">Policy</strong><code th:text="${result.rule.source}"></code></div><span class="ops-pill" th:classappend="${result.matched} ? '' : ' off'" th:text="${result.matched} ? ${result.rule.action} : 'No match'">ALERT</span></div></div></section>
+<aside class="ops-panel"><h2>Design a policy</h2><p>Write a city rule using supported keywords, metrics and comparison expressions.</p><p class="ops-error" th:if="${error != null}" th:text="${error}"></p>
+<form action="/policies/add" method="post"><div class="ops-field"><label for="name">Rule name</label><input id="name" name="name" maxlength="80" required th:value="${name}" placeholder="Quiet hours"></div>
+<div class="ops-field"><label for="source">Rule expression</label><textarea id="source" name="source" maxlength="256" required th:text="${source}" placeholder="WHEN noise > 70 AND hour >= 22 THEN ALERT"></textarea></div><button class="ops-action" type="submit">Save policy rule →</button></form>
+<div class="ops-note">Example: <code>WHEN noise &gt; 70 AND hour &gt;= 22 THEN ALERT</code><br><br>Supported: AND, OR, NOT, parentheses, &gt;, &lt;, &gt;=, &lt;=, ==. Actions are previewed, not executed.</div></aside></div>
+<section class="ops-panel"><h2>Saved city policies</h2><p>Edit your rule set by adding or removing definitions.</p><article class="ops-rule" th:each="rule : ${rules}"><div><strong th:text="${rule.name}">Quiet hours</strong><code th:text="${rule.source}">WHEN noise &gt; 70 THEN ALERT</code></div><form action="/policies/remove" method="post"><input type="hidden" name="id" th:value="${rule.id}"><button class="ops-small-btn danger" type="submit">Remove</button></form></article></section>
+<div class="ops-note">Policies and evaluations are simulated and remain only in memory while the application is running.</div>
+</main></div></body></html>

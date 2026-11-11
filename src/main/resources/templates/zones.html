@@ -1,51 +1,9 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Smart City Zone Management | SmartCity360</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
-    <link rel="stylesheet" th:href="@{/css/operations.css}" href="/css/operations.css">
-    <link rel="stylesheet" th:href="@{/css/service-pages.css}" href="/css/service-pages.css">
-    <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
-</head>
-<body>
-<div th:replace="~{fragments/navigation :: sidebar('zones')}"></div>
-<div class="workspace">
-    <div th:replace="~{fragments/navigation :: topbar('zones')}"></div>
-    <main class="service-main">
-        <div class="service-heading">
-            <div><span class="eyebrow">CITY OPERATIONS / ZONES</span><h1>Smart City Zone Management</h1><p>Manage infrastructure power from individual buildings to entire districts.</p></div>
-            <a class="service-back" href="/">View overview <span aria-hidden="true">↗</span></a>
-        </div>
-
-        <div class="service-stats">
-            <div class="service-stat"><span>CURRENT POWER USAGE</span><strong th:text="|${totalUsage} kW|">440 kW</strong><small>Active consumption across all zones</small></div>
-            <div class="service-stat"><span>ACTIVE BUILDINGS</span><strong th:text="${activeBuildings}">5</strong><small>Buildings with power currently enabled</small></div>
-            <div class="service-stat"><span>POWER MANAGEMENT</span><strong>Hierarchy control</strong><small>Changes cascade to all children</small></div>
-        </div>
-        <section class="service-panel">
-            <div class="service-panel-header"><div><span class="panel-label">INFRASTRUCTURE DIRECTORY</span><h2>City power network</h2><p>Manage the city, district, street, or building. Switching off a parent controls all nested buildings.</p></div><a href="/#city-map" class="subtle-action">View on map ↗</a></div>
-            <div class="table-scroll">
-                <table class="operations-table zone-table">
-                    <thead><tr><th>Infrastructure</th><th>Category</th><th>Power usage</th><th>Active buildings</th><th>Power controls</th></tr></thead>
-                    <tbody>
-                        <tr th:each="zone : ${zones}">
-                            <td><div class="hierarchy-item" th:style="|padding-left:${zone.level * 18}px|"><span class="hierarchy-symbol" th:text="${zone.level == 3} ? '▣' : '▤'">▤</span><strong th:text="${zone.name}">Zone</strong></div></td>
-                            <td><span class="type-pill" th:text="${zone.type}">District</span></td>
-                            <td class="table-number" th:text="|${zone.usage} kW|">0 kW</td>
-                            <td class="table-number" th:text="${zone.active}">0</td>
-                            <td><div class="control-group">
-                                <form th:action="@{/zones/{id}/power(id=${zone.id})}" method="post"><input type="hidden" name="on" value="true"><button type="submit" class="control-on">Power ON</button></form>
-                                <form th:action="@{/zones/{id}/power(id=${zone.id})}" method="post"><input type="hidden" name="on" value="false"><button type="submit" class="control-off">Power OFF</button></form>
-                            </div></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-        <div class="service-info-strip"><span>ⓘ</span> Changes apply to the in-memory city model and are reflected in the dashboard metrics. This is not a live power grid.</div>
-    </main>
-</div>
-</body>
-</html>
+<!DOCTYPE html><html lang="en" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Smart City Zones | SmartCity360</title><link rel="stylesheet" th:href="@{/css/app.css}"><link rel="stylesheet" th:href="@{/css/operations.css}"><script th:src="@{/js/app.js}" defer></script></head><body><div th:replace="~{fragments/navigation :: sidebar('zones')}"></div><div class="workspace"><div th:replace="~{fragments/navigation :: topbar('zones')}"></div><main class="ops-page"><div class="ops-header"><div><span class="ops-eyebrow">INFRASTRUCTURE · POWER MANAGEMENT</span><h1>Smart City Zones</h1><p>Explore city, district, street and building hierarchy with centralized energy controls.</p></div><span class="ops-demo">● Demo workspace</span></div>
+<div class="ops-stats"><section class="ops-stat"><small>Total current usage</small><strong th:text="|${totalUsage} kW|">440 kW</strong><p>Powered infrastructure</p></section><section class="ops-stat"><small>Active buildings</small><strong th:text="${activeBuildings}">5</strong><p>Buildings currently online</p></section><section class="ops-stat"><small>Control scope</small><strong>4 levels</strong><p>City · District · Street · Building</p></section></div>
+<div class="ops-panel" style="margin-bottom:20px"><h2>Infrastructure hierarchy</h2><p>Switch an individual building, a street, a district, or the entire city on or off. Parent commands cascade through their children.</p>
+<div class="ops-table-wrap"><table class="ops-table"><thead><tr><th>Infrastructure</th><th>Type</th><th>Power</th><th>Active buildings</th><th>Actions</th></tr></thead><tbody>
+<tr th:each="zone : ${zones}"><td><div th:style="|padding-left:${zone.level * 19}px|"><strong th:text="${zone.name}">City</strong></div></td><td><span class="ops-pill" th:text="${zone.type}">Building</span></td><td th:text="|${zone.usage} kW|">0 kW</td><td th:text="${zone.active}">0</td><td>
+<form th:action="@{/zones/{id}/power(id=${zone.id})}" method="post"><input type="hidden" name="on" value="true"><button class="ops-small-btn" type="submit">Power on</button></form>
+<form th:action="@{/zones/{id}/power(id=${zone.id})}" method="post"><input type="hidden" name="on" value="false"><button class="ops-small-btn danger" type="submit">Power off</button></form></td></tr></tbody></table></div></div>
+<div class="ops-note">All assets represent a local city model; actions only affect this in-memory application. <a href="/#city-map">View example locations on the map →</a></div>
+</main></div></body></html>

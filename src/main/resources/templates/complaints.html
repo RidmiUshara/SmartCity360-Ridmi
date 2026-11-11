@@ -1,64 +1,21 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Citizen Service Desk | SmartCity360</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
-    <link rel="stylesheet" th:href="@{/css/operations.css}" href="/css/operations.css">
-    <link rel="stylesheet" th:href="@{/css/service-pages.css}" href="/css/service-pages.css">
-    <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
-</head>
-<body>
-<div th:replace="~{fragments/navigation :: sidebar('complaints')}"></div>
-<div class="workspace">
-    <div th:replace="~{fragments/navigation :: topbar('complaints')}"></div>
-    <main class="service-main">
-        <div class="service-heading">
-            <div><span class="eyebrow">CITY OPERATIONS / COMPLAINTS</span><h1>Citizen Service Desk</h1><p>Submit, review and route service requests to the appropriate city team.</p></div>
-            <a class="service-back" href="/">View overview <span aria-hidden="true">↗</span></a>
-        </div>
-
-        <div class="service-stats">
-            <div class="service-stat"><span>REQUESTS RECEIVED</span><strong th:text="${#lists.size(complaints)}">0</strong><small>Tickets created this session</small></div>
-            <div class="service-stat"><span>ESCALATION WORKFLOW</span><strong>3 response levels</strong><small>Local staff → Supervisor → City Manager</small></div>
-            <div class="service-stat"><span>SERVICE CHANNEL</span><strong>City helpdesk</strong><small>Severity-driven assignment</small></div>
-        </div>
-        <div class="ticket-workspace">
-            <section class="service-panel">
-                <div class="service-panel-header"><div><span class="panel-label">NEW SERVICE REQUEST</span><h2>Create a ticket</h2><p>Provide the issue, its location and urgency to assign it to the appropriate team.</p></div><span class="panel-header-icon">＋</span></div>
-                <div class="service-error" th:if="${error}" th:text="${error}"></div>
-                <form action="/complaints" method="post" class="service-form">
-                    <label for="description">Issue description</label>
-                    <textarea name="description" id="description" maxlength="300" rows="5" required th:text="${description}" placeholder="Describe the issue reported by a citizen"></textarea>
-                    <label for="location">Location</label>
-                    <input type="text" name="location" id="location" maxlength="120" required th:value="${location}" placeholder="e.g. Central Park, Main Street">
-                    <label for="severity">Urgency level</label>
-                    <select name="severity" id="severity" required>
-                        <option th:each="level : ${severities}" th:value="${level}" th:text="${level}" th:selected="${level == selectedSeverity}">LOW</option>
-                    </select>
-                    <div class="service-info-strip compact"><span>ⓘ</span> High and critical requests are automatically routed to City Manager.</div>
-                    <button class="primary-action" type="submit">Create service ticket <span aria-hidden="true">→</span></button>
-                </form>
-            </section>
-            <section class="service-panel">
-                <div class="service-panel-header"><div><span class="panel-label">SERVICE REQUESTS</span><h2>Ticket queue <span class="heading-count" th:text="${#lists.size(complaints)}">0</span></h2><p>Latest submitted tickets and their assigned teams.</p></div><span class="panel-header-icon">☷</span></div>
-                <div class="service-empty" th:if="${#lists.isEmpty(complaints)}"><span class="empty-large-icon">☷</span><strong>No tickets in the queue</strong><p>Submit a service request to see the ticket, urgency and escalation route here.</p></div>
-                <div class="ticket-list">
-                    <article class="ticket-card" th:each="complaint,stat : ${complaints}">
-                        <div class="ticket-top"><span class="ticket-id" th:text="|REQUEST #${#numbers.formatInteger(#lists.size(complaints) - stat.index,4)}|">REQUEST #0001</span>
-                            <span class="priority-tag" th:classappend="| priority-${#strings.toLowerCase(complaint.severity.name())}|" th:text="${complaint.severity}">LOW</span></div>
-                        <h3 th:text="${complaint.description}">City service issue</h3>
-                        <div class="ticket-location"><span aria-hidden="true">⌖</span><span th:text="${complaint.location}">Main Street</span></div>
-                        <div class="ticket-details"><div><small>Assigned team</small><strong th:text="${complaint.assignedTo}">Local Staff</strong></div>
-                            <div><small>Routing status</small><strong class="ticket-routed"><span class="status-dot"></span> Routed</strong></div></div>
-                        <div class="ticket-route"><span>ESCALATION PATH</span><p th:text="${#strings.listJoin(complaint.escalationPath, ' → ')}">Local Staff</p></div>
-                    </article>
-                </div>
-            </section>
-        </div>
-        <div class="service-info-strip"><span>ⓘ</span> Tickets are automatically assigned by urgency. Status indicates assignment only, not actual resolution. Records reset when the application restarts.</div>
-    </main>
-</div>
-</body>
-</html>
+<!DOCTYPE html><html lang="en" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Service Desk & Tickets | SmartCity360</title><link rel="stylesheet" th:href="@{/css/app.css}"><link rel="stylesheet" th:href="@{/css/operations.css}"><script th:src="@{/js/app.js}" defer></script></head><body><div th:replace="~{fragments/navigation :: sidebar('complaints')}"></div><div class="workspace"><div th:replace="~{fragments/navigation :: topbar('complaints')}"></div><main class="ops-page"><div class="ops-header"><div><span class="ops-eyebrow">CITIZEN SERVICES · CASE MANAGEMENT</span><h1>Service Desk & Tickets</h1><p>Receive city complaints, assign the responsible team and track every escalation step.</p></div><span class="ops-demo">● Demo workspace</span></div>
+<div class="ops-stats"><section class="ops-stat"><small>Total tickets</small><strong th:text="${#lists.size(complaints)}">0</strong><p>Created this session</p></section>
+<section class="ops-stat"><small>High priority</small><strong th:text="${#lists.size(complaints.?[severity.name() == 'HIGH' or severity.name() == 'CRITICAL'])}">0</strong><p>High and critical severity</p></section>
+<section class="ops-stat"><small>Routing teams</small><strong>3</strong><p>Local Staff → Supervisor → City Manager</p></section></div>
+<div class="ops-columns"><section class="ops-panel"><h2>Submit new service ticket</h2><p>Provide the issue location and severity. The system will assign it to the responsible team.</p>
+<p class="ops-error" th:if="${error != null}" th:text="${error}"></p>
+<form action="/complaints" method="post"><div class="ops-field"><label for="description">Issue description</label><textarea id="description" name="description" maxlength="300" required placeholder="Describe the reported city issue" th:text="${description}"></textarea></div>
+<div class="ops-field"><label for="location">Issue location</label><input id="location" name="location" maxlength="120" required th:value="${location}" placeholder="Street, district or landmark"></div>
+<div class="ops-field"><label for="severity">Severity level</label><select id="severity" name="severity"><option th:each="level : ${severities}" th:value="${level}" th:text="${level}" th:selected="${level == selectedSeverity}">LOW</option></select></div>
+<button class="ops-action" type="submit">Create service ticket →</button></form></section>
+<aside class="ops-panel"><h2>Escalation workflow</h2><p>Severity determines the final case owner. Each team that reviews the request appears in its routing history.</p>
+<div class="ticket-workflow"><span>Local Staff</span> → <span>Supervisor</span> → <span>City Manager</span></div>
+<div class="ops-note">LOW → Local Staff<br>MEDIUM → Supervisor<br>HIGH / CRITICAL → City Manager<br><br>All ticket records are demo data and reset when the application restarts.</div></aside></div>
+<section class="ops-panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px"><div><h2>Citizen service tickets</h2><p>Reported cases and assignment history</p></div><span class="ops-pill" th:text="|${#lists.size(complaints)} tickets|">0 tickets</span></div>
+<div class="ticket-empty" th:if="${#lists.isEmpty(complaints)}">No tickets yet. Submit a report above to create your first service ticket.</div>
+<div class="ticket-list"><article class="ticket-card" th:each="complaint,stat : ${complaints}">
+<div class="ticket-top"><strong th:text="|TICKET #${#numbers.formatInteger(stat.count,3)}|">TICKET #001</strong><span class="ticket-severity" th:classappend="${complaint.severity}" th:text="${complaint.severity}">HIGH</span></div>
+<h3 th:text="${complaint.description}">Reported issue</h3><p th:text="${complaint.location}">City zone</p>
+<div class="ticket-meta"><span><strong>Case owner:</strong> <span th:text="${complaint.assignedTo}">Team</span></span><span><strong>State:</strong> Assigned</span></div>
+<div class="ticket-route"><strong>Escalation path:</strong> <span th:text="${#strings.listJoin(complaint.escalationPath, ' → ')}">Local Staff</span></div></article></div></section>
+</main></div></body></html>
