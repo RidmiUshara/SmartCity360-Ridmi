@@ -1,31 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="sidebar(active)">
-    <button class="mobile-nav-toggle" type="button" aria-label="Open navigation" aria-controls="appSidebar" aria-expanded="false" data-nav-toggle>
-        <span>☰</span>
-    </button>
-    <div class="nav-scrim" data-nav-close></div>
-    <aside class="side-nav" id="appSidebar" aria-label="Main navigation">
-        <a class="brand" href="/">
-            <span class="brand-symbol"><span class="brand-symbol-inner">◈</span></span>
-            <span class="brand-text"><strong>SmartCity<span>360</span></strong><small>Urban operations</small></span>
-        </a>
-        <div class="nav-section-title">WORKSPACE</div>
-        <nav class="nav-links" aria-label="Application modules">
-            <a href="/" th:classappend="${active == 'dashboard'} ? ' active' : ''"><span class="nav-icon">▦</span><span>Overview</span></a>
-            <a href="/energy" th:classappend="${active == 'energy'} ? ' active' : ''"><span class="nav-icon">ϟ</span><span>Energy security</span></a>
-            <a href="/zones" th:classappend="${active == 'zones'} ? ' active' : ''"><span class="nav-icon">▤</span><span>Smart zones</span></a>
-            <a href="/complaints" th:classappend="${active == 'complaints'} ? ' active' : ''"><span class="nav-icon">☷</span><span>Complaints</span></a>
-            <a href="/lights" th:classappend="${active == 'lights'} ? ' active' : ''"><span class="nav-icon">☼</span><span>Street lights</span></a>
-            <a href="/policies" th:classappend="${active == 'policies'} ? ' active' : ''"><span class="nav-icon">◇</span><span>Policy studio</span></a>
-        </nav>
-        <div class="nav-bottom">
-            <div class="nav-status"><span class="status-pulse"></span><span>System ready</span></div>
-            <div class="nav-user"><div class="nav-avatar">R</div><div><strong>City Console</strong><small>Operations workspace</small></div></div>
-            <p>Demo data · No live city infrastructure connected.</p>
-        </div>
-    </aside>
-</div>
+  <!-- Keep the existing fragment name so every module uses the new horizontal navigation without changing routes. -->
+  <div th:fragment="sidebar(active)" class="top-nav-wrapper">
+    <header class="top-nav">
+      <a class="top-brand" href="/" aria-label="SmartCity360 home">
+        <span class="top-brand-symbol" aria-hidden="true">◈</span>
+        <span class="top-brand-name">SmartCity<span>360</span><small>City Operations</small></span>
+      </a>
+      <nav class="top-links" aria-label="Main navigation">
+        <a href="/" th:classappend="${active == 'dashboard'} ? ' active' : ''">Dashboard</a>
+        <a href="/energy" th:classappend="${active == 'energy'} ? ' active' : ''">Energy</a>
+        <a href="/zones" th:classappend="${active == 'zones'} ? ' active' : ''">Zones</a>
+        <a href="/complaints" th:classappend="${active == 'complaints'} ? ' active' : ''">Complaints</a>
+        <a href="/lights" th:classappend="${active == 'lights'} ? ' active' : ''">Streetlights</a>
+        <a href="/policies" th:classappend="${active == 'policies'} ? ' active' : ''">Policy Studio</a>
+      </nav>
+      <div class="top-nav-end">
+        <span class="top-environment"><i></i><span>Demo</span></span>
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark theme" title="Toggle dark / light theme"><span aria-hidden="true">☾</span></button>
+        <span class="top-user" title="City Operations">SC</span>
+      </div>
+    </header>
+  </div>
 </body>
 </html>
