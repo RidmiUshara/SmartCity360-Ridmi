@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Policy Interpreter | SmartCity360</title>
+    <style>
+        * { box-sizing:border-box; }
+        body { font:16px system-ui,sans-serif; background:#f1f5f9; color:#1e293b; margin:0; }
+        header { background:#142d4e; color:white; padding:28px max(20px, calc((100% - 1040px)/2)); }
+        header a { color:#bfdbfe; }
+        main { padding:0 20px 35px; max-width:1040px; margin:30px auto; }
+        .panel { background:white; border:1px solid #dae4ef; border-radius:13px; padding:25px; margin-bottom:20px; }
+        .row { display:grid; grid-template-columns:repeat(auto-fit, minmax(190px,1fr)); gap:15px; }
+        label { display:block; font-weight:650; margin-top:12px; }
+        input { width:100%; font:inherit; padding:11px; margin-top:6px; border:1px solid #a7b8ce; border-radius:8px; }
+        button { border:0; background:#1d4ed8; color:white; padding:11px 17px; font:inherit; border-radius:8px; cursor:pointer; margin-top:15px; }
+        button.remove { background:#64748b; padding:7px 11px; margin-top:0; }
+        .muted { color:#64748b; line-height:1.6; }
+        .error { color:#b91c1c; font-weight:650; }
+        code { overflow-wrap:anywhere; color:#1e40af; }
+        .rule { border-top:1px solid #e2e8f0; padding:15px 0; }
+        .match { color:#15803d; font-weight:700; }
+        .no-match { color:#64748b; }
+    </style>
+</head>
+<body>
+<header><a href="/">← Dashboard</a><h1>City Policy Rule Interpreter</h1><p>Part E · Interpreter Design Pattern</p></header>
+<main>
+    <section class="panel">
+        <h2>Evaluate city sensor readings</h2>
+        <p class="muted">Adjust readings and apply the same expression tree to each rule.</p>
+        <form action="/policies/evaluate" method="post">
+            <div class="row">
+                <div><label for="noise">Noise (dB)</label><input type="number" step="any" id="noise" name="noise" required th:value="${noise ?: 80}"></div>
+                <div><label for="hour">Hour (0–23)</label><input type="number" step="any" min="0" max="23" id="hour" name="hour" required th:value="${hour ?: 23}"></div>
+                <div><label for="occupancy">Occupancy (%)</label><input type="number" step="any" id="occupancy" name="occupancy" required th:value="${occupancy ?: 50}"></div>
+                <div><label for="parkedMinutes">Parked minutes</label><input type="number" step="any" id="parkedMinutes" name="parkedMinutes" required th:value="${parkedMinutes ?: 135}"></div>
+            </div>
+            <button type="submit">Evaluate policies</button>
+        </form>
+        <div th:if="${results != null}">
+            <h3>Evaluation results</h3>
+            <div class="rule" th:each="result : ${results}">
+                <strong th:text="${result.rule.name}">Policy</strong> —
+                <span th:class="${result.matched} ? 'match' : 'no-match'"
+                      th:text="${result.matched} ? ${result.rule.action} : 'No match'">ALERT</span>
+            </div>
+        </div>
+    </section>
+    <section class="panel">
+        <h2>Create a rule using the mini-language</h2>
+        <p class="muted">Format: <code>WHEN noise > 70 AND hour >= 22 THEN ALERT</code>. Allowed sensors: noise, hour, occupancy, parkedMinutes. Operators: &gt;, &gt;=, &lt;, &lt;=, ==, AND, OR, NOT, parentheses. Actions: ALERT, ISSUE_FINE, LOG.</p>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
+        <form action="/policies/add" method="post">
+            <label for="name">Rule name</label>
+            <input id="name" name="name" maxlength="80" required th:value="${name}" placeholder="Late-night noise">
+            <label for="source">DSL rule</label>
+            <input id="source" name="source" maxlength="256" required th:value="${source}" placeholder="WHEN noise > 70 AND hour >= 22 THEN ALERT">
+            <button type="submit">Add policy</button>
+        </form>
+    </section>
+    <section class="panel">
+        <h2>Saved session rules</h2>
+        <article class="rule" th:each="rule : ${rules}">
+            <strong th:text="${rule.name}">Rule</strong> —
+            <code th:text="${rule.source}">WHEN noise > 70 THEN ALERT</code>
+            <form action="/policies/remove" method="post">
+                <input type="hidden" name="id" th:value="${rule.id}">
+                <button type="submit" class="remove">Remove</button>
+            </form>
+        </article>
+    </section>
+    <p class="muted">Educational simulation only: actions are displayed, not performed. Rules are stored in memory until restart.</p>
+</main>
+</body>
+</html>
