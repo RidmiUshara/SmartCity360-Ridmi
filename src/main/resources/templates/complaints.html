@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Citizen Complaints | SmartCity360</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #f1f5f9; color: #1e293b; font: 16px system-ui, sans-serif; }
+        header { background: #142d4e; color: #fff; padding: 28px max(20px, calc((100% - 1000px)/2)); }
+        header a { color: #bfdbfe; }
+        main { max-width: 1000px; margin: 30px auto; padding: 0 20px 40px; }
+        .panel { background: white; border: 1px solid #dbe4ee; border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+        .hint { color: #56657b; line-height: 1.5; }
+        label { display: block; margin-top: 15px; font-weight: 600; }
+        input, textarea, select { font: inherit; width: 100%; padding: 11px; margin-top: 6px; border: 1px solid #a7b8ce; border-radius: 8px; }
+        button { margin-top: 20px; background: #1d4ed8; color: #fff; font: inherit; font-weight: bold; padding: 12px 18px; border: none; border-radius: 8px; cursor: pointer; }
+        .error { color: #b91c1c; font-weight: 650; }
+        .ticket { border-top: 1px solid #e2e8f0; padding: 18px 0; }
+        .ticket h3 { margin: 0 0 5px; }
+        .badge { display: inline-block; background: #dbeafe; padding: 4px 9px; border-radius: 20px; font-size: .85rem; font-weight: 650; }
+        .route { overflow-wrap: anywhere; color: #475569; font-size: .95rem; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/">← Dashboard</a>
+    <h1>Citizen Complaint Escalation</h1>
+    <p>Part C · Chain of Responsibility</p>
+</header>
+<main>
+    <section class="panel">
+        <h2>Submit a citizen complaint</h2>
+        <p class="hint">Local Staff handles LOW issues, Supervisor handles MEDIUM, and City Manager handles HIGH / CRITICAL. Every visited handler is recorded.</p>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
+        <form action="/complaints" method="post">
+            <label for="description">Problem description</label>
+            <textarea name="description" id="description" maxlength="300" required
+                      th:text="${description}" placeholder="e.g. Exposed electrical wiring"></textarea>
+            <label for="location">Location</label>
+            <input name="location" id="location" maxlength="120" required
+                   th:value="${location}" placeholder="e.g. Central Park">
+            <label for="severity">Severity</label>
+            <select name="severity" id="severity">
+                <option th:each="level : ${severities}" th:value="${level}"
+                        th:text="${level}" th:selected="${level == selectedSeverity}">LOW</option>
+            </select>
+            <button type="submit">Submit and escalate</button>
+        </form>
+    </section>
+    <section class="panel">
+        <h2>Complaint routing history</h2>
+        <p class="hint" th:if="${#lists.isEmpty(complaints)}">No complaints yet. Submit one to see the handler route.</p>
+        <article class="ticket" th:each="complaint : ${complaints}">
+            <h3 th:text="${complaint.description}">Description</h3>
+            <p><span th:text="${complaint.location}">Location</span> ·
+                <span class="badge" th:text="${complaint.severity}">LOW</span></p>
+            <p><strong>Assigned to:</strong> <span th:text="${complaint.assignedTo}">Staff</span></p>
+            <p class="route"><strong>Escalation path:</strong>
+                <span th:text="${#strings.listJoin(complaint.escalationPath, ' → ')}">Local Staff</span></p>
+        </article>
+    </section>
+    <p class="hint">Classroom simulation: complaint data is kept in memory and disappears when the application restarts.</p>
+</main>
+</body>
+</html>
