@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smart Zones | SmartCity360</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        header {
+            background: #142d4e;
+            padding: 35px;
+            text-align: center;
+            color: white;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 20px;
+        }
+
+        .summary {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            flex: 1;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .card h2 { color: #2563eb; }
+
+        .table-box {
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th { background: #e2e8f0; }
+
+        button {
+            border: none;
+            padding: 9px 15px;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .on { background: #16a34a; }
+        .off { background: #dc2626; }
+
+        form { display: inline; }
+
+        a { color: #bfdbfe; }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>Smart City Zone Management</h1>
+    <p>Part B - Composite Design Pattern</p>
+    <a href="/">Back to Dashboard</a>
+</header>
+
+<main>
+    <div class="summary">
+        <div class="card">
+            <h3>Total Power Usage</h3>
+            <h2 th:text="${totalUsage} + ' kW'">0 kW</h2>
+        </div>
+
+        <div class="card">
+            <h3>Active Buildings</h3>
+            <h2 th:text="${activeBuildings}">0</h2>
+        </div>
+    </div>
+
+    <div class="table-box">
+        <table>
+            <thead>
+            <tr>
+                <th>Infrastructure</th>
+                <th>Type</th>
+                <th>Power Usage</th>
+                <th>Active Buildings</th>
+                <th>Controls</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="zone : ${zones}">
+                <td>
+                    <div th:style="|padding-left:${zone.level * 18}px|">
+                        <strong th:text="${zone.name}">Zone</strong>
+                    </div>
+                </td>
+
+                <td th:text="${zone.type}">Type</td>
+                <td th:text="${zone.usage} + ' kW'">0 kW</td>
+                <td th:text="${zone.active}">0</td>
+
+                <td>
+                    <form th:action="@{/zones/{id}/power(id=${zone.id})}"
+                          method="post">
+                        <input type="hidden" name="on" value="true">
+                        <button class="on" type="submit">ON</button>
+                    </form>
+
+                    <form th:action="@{/zones/{id}/power(id=${zone.id})}"
+                          method="post">
+                        <input type="hidden" name="on" value="false">
+                        <button class="off" type="submit">OFF</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
