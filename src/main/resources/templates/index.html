@@ -1,41 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SmartCity360 | Ridmi</title>
-    <style>
-        * {box-sizing:border-box}
-        body {margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f1f5f9;color:#1e293b}
-        header {background:#142d4e;color:white;padding:42px 20px;text-align:center}
-        header h1 {margin:0 0 8px;font-size:2.4rem}
-        header p {color:#dbeafe;margin:7px}
-        main {max-width:1050px;margin:38px auto;padding:0 20px}
-        .grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:20px}
-        .card {display:block;background:white;border:1px solid #dce6f1;border-radius:14px;padding:24px;color:inherit;text-decoration:none;box-shadow:0 4px 15px #0f172a08;transition:transform .15s,border-color .15s}
-        .card:hover,.card:focus {transform:translateY(-3px);border-color:#2563eb;outline:none}
-        .card h2 {color:#1d4ed8;font-size:1.17rem;margin:0 0 8px}
-        .card p {color:#475569;line-height:1.5}
-        .tag {display:inline-block;background:#dbeafe;color:#1e40af;border-radius:7px;padding:6px 9px;font-size:.8rem;font-weight:700}
-        footer {text-align:center;color:#64748b;padding:30px}
-    </style>
+    <title>Overview | SmartCity360</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+    <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
 </head>
 <body>
-<header>
-    <h1>SmartCity360</h1>
-    <p>Smart City Management Platform</p>
-    <p>Object Oriented Design Patterns II · Ridmi</p>
-</header>
-<main>
-    <h2>Explore the five design pattern modules</h2>
-    <div class="grid">
-        <a class="card" href="/energy"><h2>Energy Data Security</h2><span class="tag">Part A · Decorator</span><p>Secure smart meter readings with optional compression, encryption and authentication layers.</p></a>
-        <a class="card" href="/zones"><h2>Smart Zones</h2><span class="tag">Part B · Composite</span><p>View a city hierarchy and turn power on or off for a whole district, street or building.</p></a>
-        <a class="card" href="/complaints"><h2>Citizen Complaints</h2><span class="tag">Part C · Chain of Responsibility</span><p>Submit complaints and see each handoff to the correct authority.</p></a>
-        <a class="card" href="/lights"><h2>Smart Street Lights</h2><span class="tag">Part D · Flyweight</span><p>Control individual lamps while 10,000 simulated lights reuse three shared configurations.</p></a>
-        <a class="card" href="/policies"><h2>City Policy Rules</h2><span class="tag">Part E · Interpreter</span><p>Write mini-language rules, evaluate sensor readings and see simulated policy actions.</p></a>
+<div th:replace="~{fragments/navigation :: sidebar('dashboard')}"></div>
+<div class="workspace">
+    <div class="page-topbar"><span>SmartCity360 <span style="color:#bdc8d5">/</span> <strong>Overview</strong></span>
+        <div class="topbar-right"><span>OODP II Assessment</span><span class="top-avatar">R</span></div>
     </div>
-</main>
-<footer>Educational simulation · No live municipal infrastructure is controlled</footer>
+    <main class="dashboard-content">
+        <div class="page-header">
+            <div><span class="eyebrow">CITY OPERATIONS / COMMAND CENTER</span>
+                <h1>City overview</h1>
+                <p>Monitor your smart city simulation and explore the five design patterns.</p>
+            </div>
+            <div class="header-actions"><span class="live-tag">Simulation active</span></div>
+        </div>
+        <div class="metric-grid">
+            <section class="metric-card">
+                <div class="metric-top"><span>Energy consumption</span><span class="metric-icon">ϟ</span></div>
+                <div class="metric-number"><span th:text="${totalUsage}">440</span> <small>kW</small></div>
+                <div class="metric-caption">Current modeled building usage</div>
+            </section>
+            <section class="metric-card">
+                <div class="metric-top"><span>Active buildings</span><span class="metric-icon teal">▤</span></div>
+                <div class="metric-number"><span th:text="${activeBuildings}">5</span> <small th:text="|/ ${totalBuildings}|">/ 5</small></div>
+                <div class="metric-caption">Powered buildings in the hierarchy</div>
+            </section>
+            <section class="metric-card">
+                <div class="metric-top"><span>Smart streetlights</span><span class="metric-icon amber">☼</span></div>
+                <div class="metric-number"><span th:text="${activeLights}">10000</span> <small th:text="|/ ${totalLights}|">/ 10000</small></div>
+                <div class="metric-caption">Lights currently powered on</div>
+            </section>
+            <section class="metric-card">
+                <div class="metric-top"><span>Citizen complaints</span><span class="metric-icon purple">☷</span></div>
+                <div class="metric-number" th:text="${complaintCount}">0</div>
+                <div class="metric-caption">Complaints submitted this session</div>
+            </section>
+        </div>
+        <div class="dashboard-grid">
+            <section class="panel-modern">
+                <div class="panel-heading"><div><h2>Energy distribution</h2><p>Current consumption by district · updates after power changes</p></div><a href="/zones" class="panel-link">Manage zones →</a></div>
+                <div class="chart-rows">
+                    <div th:each="district,stat : ${districts}">
+                        <div class="chart-row-top"><span th:text="${district.name}">North District</span><b th:text="|${district.usageKw} kW|">270 kW</b></div>
+                        <div class="bar-track"><div class="bar-fill" th:classappend="${stat.odd} ? ' secondary' : ''" th:style="|width:${district.percent}%|"></div></div>
+                    </div>
+                </div>
+                <div class="legend-row"><span class="legend-dot"></span> Share of total measured simulation usage</div>
+                <p class="muted-note" th:if="${totalUsage == 0}">All modeled buildings are currently switched off.</p>
+            </section>
+            <section class="panel-modern">
+                <div class="panel-heading"><div><h2>Streetlight availability</h2><p>Current ON/OFF distribution</p></div><a href="/lights" class="panel-link">View lights →</a></div>
+                <div class="donut-wrap">
+                    <div class="donut" th:style="|--active:${activePercent}%|" role="img" th:attr="aria-label=|Streetlights active: ${activePercent}%|">
+                        <div class="donut-center"><strong th:text="|${#numbers.formatDecimal(activePercent,1,1)}%|">100.0%</strong><small>Operating</small></div>
+                    </div>
+                    <div class="donut-legend">
+                        <div><span class="legend-dot alt" style="display:inline-block;margin-right:8px"></span> ON <b th:text="${activeLights}">10000</b></div>
+                        <div><span class="legend-dot" style="display:inline-block;background:#e7edf4;margin-right:8px"></span> OFF <b th:text="${inactiveLights}">0</b></div>
+                        <div><span style="color:#64748b">Shared profiles</span><b th:text="${sharedProfiles}">3</b></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="dashboard-grid">
+            <section class="panel-modern">
+                <div class="panel-heading"><div><h2>Complaint severity</h2><p>Distribution of complaints submitted this session</p></div><a href="/complaints" class="panel-link">View complaints →</a></div>
+                <div class="complaint-bars">
+                    <div class="complaint-line" th:each="item : ${severities}">
+                        <span th:text="${item.name}">LOW</span>
+                        <div class="bar-track"><div class="bar-fill" th:style="|width:${item.percent}%|"></div></div>
+                        <strong th:text="${item.count}">0</strong>
+                    </div>
+                </div>
+                <p class="muted-note" th:if="${complaintCount == 0}">No complaints recorded yet. Submit a complaint to populate this chart.</p>
+            </section>
+            <section class="panel-modern">
+                <div class="panel-heading"><div><h2>Platform status</h2><p>Five assessment scenarios, one application</p></div></div>
+                <div style="display:grid;gap:16px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>Design pattern modules</span><strong>5 / 5</strong></div>
+                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>City policy rules</span><strong th:text="${policyCount}">3</strong></div>
+                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>Simulated streetlight configurations</span><strong th:text="${sharedProfiles}">3</strong></div>
+                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>Data persistence</span><strong style="color:#b97715">In-memory demo</strong></div>
+                </div>
+            </section>
+        </div>
+        <section>
+            <div class="panel-heading"><div><h2>Explore smart city modules</h2><p>Open a workspace to demonstrate each design pattern.</p></div></div>
+            <div class="module-grid">
+                <a href="/energy" class="module-card"><span class="module-icon">ϟ</span><strong>Energy security</strong><p>Layer compression, encryption and authentication around meter streams.</p><span class="module-footer"><span class="small-pattern">A · DECORATOR</span><span>Open module →</span></span></a>
+                <a href="/zones" class="module-card"><span class="module-icon">▤</span><strong>Smart zones</strong><p>Control city districts, streets and buildings through one hierarchy.</p><span class="module-footer"><span class="small-pattern">B · COMPOSITE</span><span>Open module →</span></span></a>
+                <a href="/complaints" class="module-card"><span class="module-icon">☷</span><strong>Citizen complaints</strong><p>Track severity-based escalation through staff, supervisors and managers.</p><span class="module-footer"><span class="small-pattern">C · CHAIN OF RESPONSIBILITY</span><span>Open module →</span></span></a>
+                <a href="/lights" class="module-card"><span class="module-icon">☼</span><strong>Street lights</strong><p>View 10,000 pole instances sharing only three configuration objects.</p><span class="module-footer"><span class="small-pattern">D · FLYWEIGHT</span><span>Open module →</span></span></a>
+                <a href="/policies" class="module-card"><span class="module-icon">◇</span><strong>Policy studio</strong><p>Write and evaluate a small rule language against live form inputs.</p><span class="module-footer"><span class="small-pattern">E · INTERPRETER</span><span>Open module →</span></span></a>
+            </div>
+        </section>
+        <div class="bottom-row">
+            <section class="panel-modern">
+                <div class="panel-heading"><div><h2>Recent complaints</h2><p>Most recently submitted records</p></div><a href="/complaints" class="panel-link">All complaints →</a></div>
+                <div class="empty-state" th:if="${#lists.isEmpty(recentComplaints)}">No citizen complaints yet. Open the complaints workspace to submit a sample.</div>
+                <div class="activity-item" th:each="complaint : ${recentComplaints}">
+                    <strong th:text="${complaint.description}">Complaint</strong>
+                    <p th:text="|${complaint.location} · ${complaint.severity}|">Location</p>
+                    <small th:text="|Assigned to ${complaint.assignedTo}|">Assigned to staff</small>
+                </div>
+            </section>
+            <section class="panel-modern">
+                <div class="panel-heading"><div><h2>About this environment</h2><p>SmartCity360 classroom simulation</p></div></div>
+                <p class="muted-note">All charts and metrics are derived from the current in-memory city model. Refresh this page after changing a zone, submitting a complaint or toggling a streetlight to see the latest state.</p>
+                <p class="muted-note">This project does not communicate with real sensors or city authorities. Values reset on application restart.</p>
+                <a href="/policies" class="panel-link">Explore city policies →</a>
+            </section>
+        </div>
+    </main>
+</div>
 </body>
 </html>
