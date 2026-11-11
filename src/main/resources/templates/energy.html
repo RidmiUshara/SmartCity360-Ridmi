@@ -1,76 +1,60 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Energy Security | SmartCity360</title>
-  <style>
-    :root { color-scheme: light; }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; color: #192942; background: #f1f5f9; }
-    header { background: #142d4e; color: white; padding: 25px max(20px, calc((100% - 980px) / 2)); }
-    header a { color: #b9d9ff; text-decoration: none; font-size: .92rem; }
-    main { max-width: 1000px; margin: 28px auto; padding: 0 20px 35px; }
-    .tag { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: #6583a6; font-weight: 750; }
-    .intro { color: #475569; line-height: 1.7; }
-    .panel { background: white; padding: 26px; border-radius: 16px; border: 1px solid #e3e9f2; box-shadow: 0 7px 25px #1e293b0a; margin: 18px 0; }
-    .field { display: block; font-weight: 650; margin-bottom: 9px; }
-    textarea { display:block; width:100%; min-height: 100px; font: inherit; resize: vertical; padding: 13px; border: 1px solid #b7c4d7; border-radius: 9px; }
-    textarea:focus { outline: 2px solid #93c5fd; }
-    .options { display: flex; flex-wrap: wrap; gap: 14px; margin: 18px 0; }
-    .options label { display: flex; gap: 8px; align-items: center; padding: 12px 14px; border: 1px solid #d5e3f1; background: #f8fbff; border-radius: 9px; font-weight: 600; cursor: pointer; }
-    button { background: #1d4ed8; color: white; border: 0; padding: 12px 20px; font: inherit; font-weight: 700; border-radius: 9px; cursor: pointer; }
-    button:hover { background: #1e40af; }
-    .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-    .results > div { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; overflow-wrap: anywhere; }
-    .full { grid-column: 1 / -1; }
-    .success { color: #166534; font-weight: 750; }
-    .error { color: #b91c1c; font-weight: 750; }
-    code { display:block; white-space:pre-wrap; overflow-wrap:anywhere; font-size: .85rem; margin-top: 8px; }
-    small { color: #64748b; }
-  </style>
-  <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
-  <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Energy Data Security | SmartCity360</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+    <link rel="stylesheet" th:href="@{/css/operations.css}" href="/css/operations.css">
+    <link rel="stylesheet" th:href="@{/css/service-pages.css}" href="/css/service-pages.css">
+    <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
 </head>
 <body>
 <div th:replace="~{fragments/navigation :: sidebar('energy')}"></div>
 <div class="workspace">
-<header>
-  <a href="/">← Back to SmartCity360 dashboard</a>
-  <h1>Energy Data Security</h1>
-  <p>Flexible protection for connected energy readings</p>
-</header>
-<main>
-  <div class="panel">
-    <div class="tag">ENERGY OPERATIONS</div>
-    <h2>Protect a smart meter reading</h2>
-    <p class="intro">Select any combination of decorators. The original data-stream class stays unchanged while the selected layers wrap it dynamically.</p>
-    <form action="/energy/process" method="post">
-      <label class="field" for="reading">Meter reading</label>
-      <textarea id="reading" name="reading" maxlength="500" required th:text="${reading}"></textarea>
-      <div class="options">
-        <label><input type="checkbox" name="compress" value="true" th:checked="${compress}"> Compression (GZIP)</label>
-        <label><input type="checkbox" name="encrypt" value="true" th:checked="${encrypt}"> Encryption (AES-GCM)</label>
-        <label><input type="checkbox" name="authenticate" value="true" th:checked="${authenticate}"> Authentication (HMAC)</label>
-      </div>
-      <button type="submit">Process meter data</button>
-    </form>
-  </div>
-  <div class="panel" th:if="${error}">
-    <p class="error" th:text="${error}"></p>
-  </div>
-  <div class="panel" th:if="${encoded != null}">
-    <h2>Security pipeline result</h2>
-    <div class="results">
-      <div class="full"><strong>Encoded payload (Base64 for display)</strong><code th:text="${encoded}"></code></div>
-      <div><strong>Decoded meter reading</strong><p th:text="${decoded}"></p></div>
-      <div><strong>Input size</strong><p><span th:text="${inputBytes}"></span> bytes</p></div>
-      <div><strong>Output size</strong><p><span th:text="${outputBytes}"></span> bytes</p></div>
-      <div><strong>Tampering test</strong><p th:if="${encrypt or authenticate}" th:class="${tamperRejected} ? 'success' : 'error'" th:text="${tamperRejected} ? 'Tampered data rejected' : 'NOT rejected — investigate'"></p><p th:unless="${encrypt or authenticate}">Not applicable without integrity protection</p></div>
-    </div>
-    <p><small>Demo processing only. Keys exist temporarily in memory; do not use this interface for sensitive information or live infrastructure.</small></p>
-  </div>
-</main>
+    <div th:replace="~{fragments/navigation :: topbar('energy')}"></div>
+    <main class="service-main">
+        <div class="service-heading">
+            <div><span class="eyebrow">CITY OPERATIONS / ENERGY</span><h1>Energy Data Security</h1><p>Protect and inspect connected energy meter readings.</p></div>
+            <a class="service-back" href="/">View overview <span aria-hidden="true">↗</span></a>
+        </div>
+
+        <div class="service-stats">
+            <div class="service-stat"><span>PROCESSING MODE</span><strong>Configurable pipeline</strong><small>Enable security layers as required</small></div>
+            <div class="service-stat"><span>ENCRYPTION</span><strong>AES-GCM</strong><small>Authenticated encryption option</small></div>
+            <div class="service-stat"><span>INTEGRITY</span><strong>HMAC</strong><small>Message verification option</small></div>
+        </div>
+        <div class="service-columns">
+            <section class="service-panel">
+                <div class="service-panel-header"><div><span class="panel-label">METER DATA PROCESSING</span><h2>Secure a meter reading</h2><p>Choose the protection layers to apply to the sample data stream.</p></div><span class="panel-header-icon">ϟ</span></div>
+                <form action="/energy/process" method="post" class="service-form">
+                    <label for="reading">Meter reading payload</label>
+                    <textarea id="reading" name="reading" maxlength="500" rows="6" required th:text="${reading}" placeholder="Enter a smart meter reading"></textarea>
+                    <span class="field-help">Up to 500 characters · demo payload</span>
+                    <h3 class="form-subheading">Security layers</h3>
+                    <div class="security-options">
+                        <label class="security-option"><input type="checkbox" name="compress" value="true" th:checked="${compress}"><span class="security-option-icon">⇅</span><span><strong>Data compression</strong><small>Reduce transmitted bytes with GZIP</small></span></label>
+                        <label class="security-option"><input type="checkbox" name="encrypt" value="true" th:checked="${encrypt}"><span class="security-option-icon">◈</span><span><strong>Encryption</strong><small>Protect message contents using AES-GCM</small></span></label>
+                        <label class="security-option"><input type="checkbox" name="authenticate" value="true" th:checked="${authenticate}"><span class="security-option-icon">✓</span><span><strong>Authentication</strong><small>Validate message integrity with HMAC</small></span></label>
+                    </div>
+                    <button type="submit" class="primary-action">Process meter data <span aria-hidden="true">→</span></button>
+                </form>
+            </section>
+            <section class="service-panel service-result-panel">
+                <div class="service-panel-header"><div><span class="panel-label">PROCESSING REPORT</span><h2>Security pipeline</h2><p>Review the processed payload and verification results.</p></div><span class="panel-header-icon">▤</span></div>
+                <div class="service-error" th:if="${error}" th:text="${error}"></div>
+                <div th:if="${encoded != null}">
+                    <div class="result-status"><span class="status-dot"></span> Processing completed</div>
+                    <div class="result-stat-grid"><div><span>Input</span><strong th:text="|${inputBytes} bytes|">0 bytes</strong></div><div><span>Output</span><strong th:text="|${outputBytes} bytes|">0 bytes</strong></div></div>
+                    <div class="result-block"><span>Encoded data · Base64</span><code th:text="${encoded}">Encoded payload</code></div>
+                    <div class="result-block"><span>Decoded meter reading</span><p th:text="${decoded}">Original value</p></div>
+                    <div class="result-block"><span>Integrity check</span><strong th:if="${encrypt or authenticate}" th:classappend="${tamperRejected} ? 'result-positive' : 'result-negative'" th:text="${tamperRejected} ? 'Tampered data rejected' : 'Warning: tamper not rejected'"></strong><p th:unless="${encrypt or authenticate}">Requires integrity protection</p></div>
+                </div>
+                <div class="service-empty" th:unless="${encoded != null}"><span class="empty-large-icon">◇</span><strong>Ready to process</strong><p>Submit a meter reading to see the encoded payload, message size and verification results.</p></div>
+                <p class="service-disclaimer">Demo only. Keys are temporary and no real energy infrastructure is connected.</p>
+            </section>
+        </div>
+    </main>
 </div>
 </body>
 </html>
