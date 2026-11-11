@@ -30,12 +30,12 @@
 <header>
     <a href="/">← Dashboard</a>
     <h1>Citizen Complaint Escalation</h1>
-    <p>Part C · Chain of Responsibility</p>
+    <p>Report and manage community issues</p>
 </header>
 <main>
     <section class="panel">
         <h2>Submit a citizen complaint</h2>
-        <p class="hint">Local Staff handles LOW issues, Supervisor handles MEDIUM, and City Manager handles HIGH / CRITICAL. Every visited handler is recorded.</p>
+        <p class="hint">Reports are routed to the appropriate team based on urgency. Track the full escalation history for each complaint.</p>
         <p class="error" th:if="${error}" th:text="${error}"></p>
         <form action="/complaints" method="post">
             <label for="description">Problem description</label>
@@ -64,7 +64,7 @@
                 <span th:text="${#strings.listJoin(complaint.escalationPath, ' → ')}">Local Staff</span></p>
         </article>
     </section>
-    <p class="hint">Classroom simulation: complaint data is kept in memory and disappears when the application restarts.</p>
+    <p class="hint">Demo data is kept in memory and resets when the application restarts.</p>
 </main>
 </div>
 </body>

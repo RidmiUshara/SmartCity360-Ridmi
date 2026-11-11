@@ -11,16 +11,30 @@
 <div th:replace="~{fragments/navigation :: sidebar('dashboard')}"></div>
 <div class="workspace">
     <div class="page-topbar"><span>SmartCity360 <span style="color:#bdc8d5">/</span> <strong>Overview</strong></span>
-        <div class="topbar-right"><span>OODP II Assessment</span><span class="top-avatar">R</span></div>
+        <div class="topbar-right"><span>City Management Console</span><span class="top-avatar">R</span></div>
     </div>
     <main class="dashboard-content">
         <div class="page-header">
             <div><span class="eyebrow">CITY OPERATIONS / COMMAND CENTER</span>
                 <h1>City overview</h1>
-                <p>Monitor your smart city simulation and explore the five design patterns.</p>
+                <p>Infrastructure, energy and city services — all in one place.</p>
             </div>
-            <div class="header-actions"><span class="live-tag">Simulation active</span></div>
+            <div class="header-actions"><span class="live-tag">Demo environment</span></div>
         </div>
+        <section class="city-hero" aria-label="City operations welcome">
+            <img class="city-hero-photo" src="https://images.unsplash.com/photo-1764866208339-b096c5b21a95?auto=format&amp;fit=crop&amp;w=1600&amp;q=80" alt="Modern city skyline illuminated at dusk" width="1600" height="900" fetchpriority="high">
+            <div class="city-hero-shade" aria-hidden="true"></div>
+            <div class="city-hero-content">
+                <span class="hero-kicker"><span class="hero-kicker-dot"></span> YOUR CITY, IN FOCUS</span>
+                <h2>Connected city.<br>Smarter decisions.</h2>
+                <p>One intelligent workspace to manage infrastructure, energy, public services and urban policies.</p>
+                <div class="hero-actions">
+                    <a class="hero-primary" href="/zones">Explore city zones <span aria-hidden="true">↗</span></a>
+                    <a class="hero-secondary" href="/complaints">View city services <span aria-hidden="true">→</span></a>
+                </div>
+            </div>
+            <a class="hero-photo-credit" href="https://unsplash.com/photos/modern-cityscape-with-illuminated-skyscrapers-at-dusk-rVHfR6eea40" target="_blank" rel="noopener noreferrer">Photo: Alim / Unsplash</a>
+        </section>
         <div class="metric-grid">
             <section class="metric-card">
                 <div class="metric-top"><span>Energy consumption</span><span class="metric-icon">ϟ</span></div>
@@ -52,7 +66,7 @@
                         <div class="bar-track"><div class="bar-fill" th:classappend="${stat.odd} ? ' secondary' : ''" th:style="|width:${district.percent}%|"></div></div>
                     </div>
                 </div>
-                <div class="legend-row"><span class="legend-dot"></span> Share of total measured simulation usage</div>
+                <div class="legend-row"><span class="legend-dot"></span> Share of current city energy usage</div>
                 <p class="muted-note" th:if="${totalUsage == 0}">All modeled buildings are currently switched off.</p>
             </section>
             <section class="panel-modern">
@@ -82,9 +96,9 @@
                 <p class="muted-note" th:if="${complaintCount == 0}">No complaints recorded yet. Submit a complaint to populate this chart.</p>
             </section>
             <section class="panel-modern">
-                <div class="panel-heading"><div><h2>Platform status</h2><p>Five assessment scenarios, one application</p></div></div>
+                <div class="panel-heading"><div><h2>Platform status</h2><p>Connected operations across the city</p></div></div>
                 <div style="display:grid;gap:16px">
-                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>Design pattern modules</span><strong>5 / 5</strong></div>
+                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>Connected service modules</span><strong>5 connected</strong></div>
                     <div style="display:flex;justify-content:space-between;font-size:13px"><span>City policy rules</span><strong th:text="${policyCount}">3</strong></div>
                     <div style="display:flex;justify-content:space-between;font-size:13px"><span>Simulated streetlight configurations</span><strong th:text="${sharedProfiles}">3</strong></div>
                     <div style="display:flex;justify-content:space-between;font-size:13px"><span>Data persistence</span><strong style="color:#b97715">In-memory demo</strong></div>
@@ -92,13 +106,13 @@
             </section>
         </div>
         <section>
-            <div class="panel-heading"><div><h2>Explore smart city modules</h2><p>Open a workspace to demonstrate each design pattern.</p></div></div>
+            <div class="panel-heading"><div><h2>Explore smart city modules</h2><p>Explore and manage connected city services from one workspace.</p></div></div>
             <div class="module-grid">
-                <a href="/energy" class="module-card"><span class="module-icon">ϟ</span><strong>Energy security</strong><p>Layer compression, encryption and authentication around meter streams.</p><span class="module-footer"><span class="small-pattern">A · DECORATOR</span><span>Open module →</span></span></a>
-                <a href="/zones" class="module-card"><span class="module-icon">▤</span><strong>Smart zones</strong><p>Control city districts, streets and buildings through one hierarchy.</p><span class="module-footer"><span class="small-pattern">B · COMPOSITE</span><span>Open module →</span></span></a>
-                <a href="/complaints" class="module-card"><span class="module-icon">☷</span><strong>Citizen complaints</strong><p>Track severity-based escalation through staff, supervisors and managers.</p><span class="module-footer"><span class="small-pattern">C · CHAIN OF RESPONSIBILITY</span><span>Open module →</span></span></a>
-                <a href="/lights" class="module-card"><span class="module-icon">☼</span><strong>Street lights</strong><p>View 10,000 pole instances sharing only three configuration objects.</p><span class="module-footer"><span class="small-pattern">D · FLYWEIGHT</span><span>Open module →</span></span></a>
-                <a href="/policies" class="module-card"><span class="module-icon">◇</span><strong>Policy studio</strong><p>Write and evaluate a small rule language against live form inputs.</p><span class="module-footer"><span class="small-pattern">E · INTERPRETER</span><span>Open module →</span></span></a>
+                <a href="/energy" class="module-card"><span class="module-icon">ϟ</span><strong>Energy security</strong><p>Layer compression, encryption and authentication around meter streams.</p><span class="module-footer"><span class="small-pattern">DATA SECURITY</span><span>Open module →</span></span></a>
+                <a href="/zones" class="module-card"><span class="module-icon">▤</span><strong>Smart zones</strong><p>Control city districts, streets and buildings through one hierarchy.</p><span class="module-footer"><span class="small-pattern">INFRASTRUCTURE</span><span>Open module →</span></span></a>
+                <a href="/complaints" class="module-card"><span class="module-icon">☷</span><strong>Citizen complaints</strong><p>Track severity-based escalation through staff, supervisors and managers.</p><span class="module-footer"><span class="small-pattern">CITIZEN SERVICES</span><span>Open module →</span></span></a>
+                <a href="/lights" class="module-card"><span class="module-icon">☼</span><strong>Street lights</strong><p>View 10,000 pole instances sharing only three configuration objects.</p><span class="module-footer"><span class="small-pattern">LIGHTING NETWORK</span><span>Open module →</span></span></a>
+                <a href="/policies" class="module-card"><span class="module-icon">◇</span><strong>Policy studio</strong><p>Write and evaluate a small rule language against live form inputs.</p><span class="module-footer"><span class="small-pattern">SMART POLICIES</span><span>Open module →</span></span></a>
             </div>
         </section>
         <div class="bottom-row">
@@ -112,9 +126,9 @@
                 </div>
             </section>
             <section class="panel-modern">
-                <div class="panel-heading"><div><h2>About this environment</h2><p>SmartCity360 classroom simulation</p></div></div>
-                <p class="muted-note">All charts and metrics are derived from the current in-memory city model. Refresh this page after changing a zone, submitting a complaint or toggling a streetlight to see the latest state.</p>
-                <p class="muted-note">This project does not communicate with real sensors or city authorities. Values reset on application restart.</p>
+                <div class="panel-heading"><div><h2>About this environment</h2><p>City management overview</p></div></div>
+                <p class="muted-note">Charts and metrics are based on the current city model. Refresh this page after changing a zone, submitting a complaint or toggling a streetlight to see the latest state.</p>
+                <p class="muted-note">Demo environment: data is simulated, not from live city sensors. Values reset when the application restarts.</p>
                 <a href="/policies" class="panel-link">Explore city policies →</a>
             </section>
         </div>

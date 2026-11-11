@@ -37,12 +37,12 @@
 <div class="workspace">
 <header>
   <a href="/">← Back to SmartCity360 dashboard</a>
-  <h1>Part A · Energy Data Security</h1>
-  <p>Decorator Design Pattern — Layered meter data protection</p>
+  <h1>Energy Data Security</h1>
+  <p>Flexible protection for connected energy readings</p>
 </header>
 <main>
   <div class="panel">
-    <div class="tag">Assignment Part A</div>
+    <div class="tag">ENERGY OPERATIONS</div>
     <h2>Protect a smart meter reading</h2>
     <p class="intro">Select any combination of decorators. The original data-stream class stays unchanged while the selected layers wrap it dynamically.</p>
     <form action="/energy/process" method="post">
@@ -68,7 +68,7 @@
       <div><strong>Output size</strong><p><span th:text="${outputBytes}"></span> bytes</p></div>
       <div><strong>Tampering test</strong><p th:if="${encrypt or authenticate}" th:class="${tamperRejected} ? 'success' : 'error'" th:text="${tamperRejected} ? 'Tampered data rejected' : 'NOT rejected — investigate'"></p><p th:unless="${encrypt or authenticate}">Not applicable without integrity protection</p></div>
     </div>
-    <p><small>Educational demonstration only. The keys exist in memory for a single request; do not use with real infrastructure or personal data.</small></p>
+    <p><small>Demo processing only. Keys exist temporarily in memory; do not use this interface for sensitive information or live infrastructure.</small></p>
   </div>
 </main>
 </div>
