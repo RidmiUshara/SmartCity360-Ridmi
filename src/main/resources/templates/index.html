@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,68 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SmartCity360 | Ridmi</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f1f5f9;
-            margin: 0;
-            color: #1e293b;
-        }
-        header {
-            background: #142d4e;
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        main {
-            max-width: 950px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px #00000010;
-        }
-        .card h3 { color: #1d4ed8; }
+        * {box-sizing:border-box}
+        body {margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f1f5f9;color:#1e293b}
+        header {background:#142d4e;color:white;padding:42px 20px;text-align:center}
+        header h1 {margin:0 0 8px;font-size:2.4rem}
+        header p {color:#dbeafe;margin:7px}
+        main {max-width:1050px;margin:38px auto;padding:0 20px}
+        .grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:20px}
+        .card {display:block;background:white;border:1px solid #dce6f1;border-radius:14px;padding:24px;color:inherit;text-decoration:none;box-shadow:0 4px 15px #0f172a08;transition:transform .15s,border-color .15s}
+        .card:hover,.card:focus {transform:translateY(-3px);border-color:#2563eb;outline:none}
+        .card h2 {color:#1d4ed8;font-size:1.17rem;margin:0 0 8px}
+        .card p {color:#475569;line-height:1.5}
+        .tag {display:inline-block;background:#dbeafe;color:#1e40af;border-radius:7px;padding:6px 9px;font-size:.8rem;font-weight:700}
+        footer {text-align:center;color:#64748b;padding:30px}
     </style>
 </head>
 <body>
 <header>
     <h1>SmartCity360</h1>
     <p>Smart City Management Platform</p>
-    <p>Object Oriented Design Patterns II</p>
+    <p>Object Oriented Design Patterns II · Ridmi</p>
 </header>
-
 <main>
-    <h2>System Modules</h2>
+    <h2>Explore the five design pattern modules</h2>
     <div class="grid">
-        <div class="card">
-            <h3>Energy Security</h3>
-            <p>Decorator Pattern</p>
-        </div>
-        <div class="card">
-            <h3>Smart Zones</h3>
-            <p>Composite Pattern</p>
-        </div>
-        <div class="card">
-            <h3>Citizen Complaints</h3>
-            <p>Chain of Responsibility</p>
-        </div>
-        <div class="card">
-            <h3>Smart Street Lights</h3>
-            <p>Flyweight Pattern</p>
-        </div>
-        <div class="card">
-            <h3>City Policy Rules</h3>
-            <p>Interpreter Pattern</p>
-        </div>
+        <a class="card" href="/energy"><h2>Energy Data Security</h2><span class="tag">Part A · Decorator</span><p>Secure smart meter readings with optional compression, encryption and authentication layers.</p></a>
+        <a class="card" href="/zones"><h2>Smart Zones</h2><span class="tag">Part B · Composite</span><p>View a city hierarchy and turn power on or off for a whole district, street or building.</p></a>
+        <a class="card" href="/complaints"><h2>Citizen Complaints</h2><span class="tag">Part C · Chain of Responsibility</span><p>Submit complaints and see each handoff to the correct authority.</p></a>
+        <a class="card" href="/lights"><h2>Smart Street Lights</h2><span class="tag">Part D · Flyweight</span><p>Control individual lamps while 10,000 simulated lights reuse three shared configurations.</p></a>
+        <a class="card" href="/policies"><h2>City Policy Rules</h2><span class="tag">Part E · Interpreter</span><p>Write mini-language rules, evaluate sensor readings and see simulated policy actions.</p></a>
     </div>
 </main>
+<footer>Educational simulation · No live municipal infrastructure is controlled</footer>
 </body>
 </html>
