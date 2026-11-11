@@ -1,9 +1,65 @@
-<!DOCTYPE html><html lang="en" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Street Lighting Network | SmartCity360</title><link rel="stylesheet" th:href="@{/css/app.css}"><link rel="stylesheet" th:href="@{/css/operations.css}"><script th:src="@{/js/app.js}" defer></script></head><body><div th:replace="~{fragments/navigation :: sidebar('lights')}"></div><div class="workspace"><div th:replace="~{fragments/navigation :: topbar('lights')}"></div><main class="ops-page"><div class="ops-header"><div><span class="ops-eyebrow">INFRASTRUCTURE · LIGHTING OPERATIONS</span><h1>Street Lighting Network</h1><p>Monitor individual city lights and manage a shared, efficient lighting configuration.</p></div><span class="ops-demo">● Demo workspace</span></div>
-<div class="ops-stats"><section class="ops-stat"><small>Total light assets</small><strong th:text="${totalLights}">10000</strong><p>Simulated streetlights</p></section><section class="ops-stat"><small>Lights currently on</small><strong th:text="${poweredLights}">10000</strong><p>Operating light poles</p></section><section class="ops-stat"><small>Shared configurations</small><strong th:text="${sharedProfiles}">3</strong><p>Reusable lighting profiles</p></section></div>
-<section class="ops-panel"><h2>Light asset inventory</h2><p>First 15 poles of the city network. Select any pole to toggle its power state independently.</p>
-<div class="ops-table-wrap"><table class="ops-table"><thead><tr><th>Asset</th><th>Site</th><th>Fixture type</th><th>Power rating</th><th>Status</th><th>Control</th></tr></thead><tbody><tr th:each="light : ${lights}">
-<td><strong th:text="|LGT-${#numbers.formatInteger(light.id,5)}|">LGT-00001</strong></td><td th:text="${light.location}">Zone 1</td><td th:text="${light.configuration.model}">Road-LED</td><td th:text="|${light.configuration.wattage} W|">70 W</td>
-<td><span class="ops-pill" th:classappend="${light.on} ? '' : ' off'" th:text="${light.on} ? 'Online' : 'Offline'">Online</span></td>
-<td><form th:action="@{/lights/{id}/toggle(id=${light.id})}" method="post"><button class="ops-small-btn" th:classappend="${light.on} ? ' danger' : ''" type="submit" th:text="${light.on} ? 'Turn off' : 'Turn on'">Toggle</button></form></td>
-</tr></tbody></table></div></section><div class="ops-note">Streetlight locations in this demo are synthetic names. Control changes do not affect physical lighting equipment.</div>
-</main></div></body></html>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smart Street Lights | SmartCity360</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #f1f5f9; color: #1e293b; font-family: system-ui, sans-serif; }
+        header { background: #142d4e; color: white; padding: 28px max(20px, calc((100% - 1080px)/2)); }
+        header a { color: #bfdbfe; }
+        main { max-width: 1080px; margin: 30px auto; padding: 0 20px; }
+        .stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px; }
+        .stat, .panel { padding:22px; border:1px solid #dbe4ee; border-radius:13px; background:white; margin-bottom:20px; }
+        .stat strong { display:block; color:#1d4ed8; font-size:2rem; }
+        .panel { overflow-x: auto; }
+        table { width:100%; border-collapse:collapse; text-align:left; }
+        th,td { padding:13px; border-bottom:1px solid #e2e8f0; }
+        th { background:#f8fafc; }
+        button { border:0; border-radius:8px; padding:9px 14px; color:white; background:#1d4ed8; cursor:pointer; }
+        .muted { color:#64748b; }
+        .active { color:#15803d; font-weight:700; }
+        .inactive { color:#b91c1c; font-weight:700; }
+    </style>
+  <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+  <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
+</head>
+<body>
+<div th:replace="~{fragments/navigation :: sidebar('lights')}"></div>
+<div class="workspace">
+<header>
+    <a href="/">← Dashboard</a>
+    <h1>Smart Street Light Management</h1>
+    <p>Connected lighting network</p>
+</header>
+<main>
+    <section class="stats">
+        <div class="stat">Physical street lights<strong th:text="${totalLights}">10000</strong></div>
+        <div class="stat">Shared configurations<strong th:text="${sharedProfiles}">3</strong></div>
+        <div class="stat">Lights currently ON<strong th:text="${poweredLights}">10000</strong></div>
+    </section>
+    <section class="panel">
+        <h2>Street light sample</h2>
+        <p class="muted">Showing the first 15 of 10,000 simulated lights. Each location has independent controls with centrally managed lamp profiles.</p>
+        <table>
+            <thead><tr><th>Pole</th><th>Location</th><th>Shared profile</th><th>Wattage</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+            <tr th:each="light : ${lights}">
+                <td th:text="${light.id}">1</td>
+                <td th:text="${light.location}">Zone 1</td>
+                <td th:text="${light.configuration.model}">Road-LED</td>
+                <td th:text="|${light.configuration.wattage} W|">70 W</td>
+                <td th:class="${light.on} ? 'active' : 'inactive'" th:text="${light.on} ? 'ON' : 'OFF'">ON</td>
+                <td><form th:action="@{/lights/{id}/toggle(id=${light.id})}" method="post">
+                    <button type="submit">Toggle</button>
+                </form></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+    <p class="muted">Demo network: lighting status is simulated and resets after application restart.</p>
+</main>
+</div>
+</body>
+</html>

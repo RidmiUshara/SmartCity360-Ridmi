@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -65,25 +66,9 @@ public class HomeController {
         model.addAttribute("recentComplaints", complaints.stream().limit(4).toList());
         model.addAttribute("severities", severities);
         model.addAttribute("policyCount", policyService.getRules().size());
-        // Coordinates are illustrative markers around Colombo, not actual asset locations.
-        model.addAttribute("mapSites", zoneService.getZones().stream()
-                .filter(row -> "Building".equals(row.type()))
-                .map(row -> {
-                    double[] point = switch (row.id()) {
-                        case "hospital" -> new double[]{6.9316, 79.8577};
-                        case "school" -> new double[]{6.9365, 79.8720};
-                        case "library" -> new double[]{6.9220, 79.8619};
-                        case "mall" -> new double[]{6.9140, 79.8508};
-                        case "office" -> new double[]{6.9067, 79.8684};
-                        default -> new double[]{6.9271, 79.8612};
-                    };
-                    return new MapSite(row.name(), point[0], point[1],
-                            row.getActive() > 0, row.getUsage());
-                }).toList());
         return "index";
     }
 
     public record DistrictUsage(String name, int usageKw, int activeBuildings, double percent) {}
     public record SeverityCount(String name, long count, double percent) {}
-    public record MapSite(String name, double lat, double lng, boolean powered, int usage) {}
 }

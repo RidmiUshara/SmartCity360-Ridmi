@@ -2,56 +2,30 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="sidebar(active)">
-    <button class="mobile-nav-toggle" type="button" aria-label="Open navigation" aria-controls="appSidebar" aria-expanded="false" data-nav-toggle>☰</button>
+    <button class="mobile-nav-toggle" type="button" aria-label="Open navigation" aria-controls="appSidebar" aria-expanded="false" data-nav-toggle>
+        <span>☰</span>
+    </button>
     <div class="nav-scrim" data-nav-close></div>
     <aside class="side-nav" id="appSidebar" aria-label="Main navigation">
         <a class="brand" href="/">
             <span class="brand-symbol"><span class="brand-symbol-inner">◈</span></span>
-            <span class="brand-text"><strong>SmartCity<span>360</span></strong><small>Operations platform</small></span>
+            <span class="brand-text"><strong>SmartCity<span>360</span></strong><small>Urban operations</small></span>
         </a>
-        <div class="nav-section-title">COMMAND CENTER</div>
-        <nav class="nav-links" aria-label="City management navigation">
-            <a href="/" th:classappend="${active == 'dashboard'} ? ' active' : ''"><span class="nav-icon">▦</span><span>City overview</span></a>
-            <a href="/#city-map"><span class="nav-icon">⌖</span><span>Operations map</span></a>
-        </nav>
-        <div class="nav-section-title">INFRASTRUCTURE</div>
-        <nav class="nav-links" aria-label="Infrastructure navigation">
-            <a href="/zones" th:classappend="${active == 'zones'} ? ' active' : ''"><span class="nav-icon">▤</span><span>Smart city zones</span></a>
-            <a href="/lights" th:classappend="${active == 'lights'} ? ' active' : ''"><span class="nav-icon">☼</span><span>Street lighting</span></a>
-            <a href="/energy" th:classappend="${active == 'energy'} ? ' active' : ''"><span class="nav-icon">ϟ</span><span>Energy data security</span></a>
-        </nav>
-        <div class="nav-section-title">CITY SERVICES</div>
-        <nav class="nav-links" aria-label="City services navigation">
-            <a href="/complaints" th:classappend="${active == 'complaints'} ? ' active' : ''"><span class="nav-icon">☷</span><span>Support tickets</span></a>
+        <div class="nav-section-title">WORKSPACE</div>
+        <nav class="nav-links" aria-label="Application modules">
+            <a href="/" th:classappend="${active == 'dashboard'} ? ' active' : ''"><span class="nav-icon">▦</span><span>Overview</span></a>
+            <a href="/energy" th:classappend="${active == 'energy'} ? ' active' : ''"><span class="nav-icon">ϟ</span><span>Energy security</span></a>
+            <a href="/zones" th:classappend="${active == 'zones'} ? ' active' : ''"><span class="nav-icon">▤</span><span>Smart zones</span></a>
+            <a href="/complaints" th:classappend="${active == 'complaints'} ? ' active' : ''"><span class="nav-icon">☷</span><span>Complaints</span></a>
+            <a href="/lights" th:classappend="${active == 'lights'} ? ' active' : ''"><span class="nav-icon">☼</span><span>Street lights</span></a>
             <a href="/policies" th:classappend="${active == 'policies'} ? ' active' : ''"><span class="nav-icon">◇</span><span>Policy studio</span></a>
         </nav>
         <div class="nav-bottom">
-            <div class="nav-status"><span class="status-pulse"></span><span>Demo workspace ready</span></div>
-            <div class="nav-user"><div class="nav-avatar">SC</div><div><strong>City Operations</strong><small>Control center</small></div></div>
-            <p>Sample data · Not connected to real infrastructure</p>
+            <div class="nav-status"><span class="status-pulse"></span><span>System ready</span></div>
+            <div class="nav-user"><div class="nav-avatar">R</div><div><strong>City Console</strong><small>Operations workspace</small></div></div>
+            <p>Demo data · No live city infrastructure connected.</p>
         </div>
     </aside>
-</div>
-<div th:fragment="topbar(active)" class="operations-topbar">
-    <div class="operations-topbar-location">
-        <span class="topbar-kicker">SMARTCITY360</span>
-        <span class="topbar-separator">/</span>
-        <strong th:switch="${active}">
-            <span th:case="'dashboard'">Operations Overview</span>
-            <span th:case="'energy'">Energy Security</span>
-            <span th:case="'zones'">City Zones</span>
-            <span th:case="'lights'">Lighting Network</span>
-            <span th:case="'complaints'">Service Desk</span>
-            <span th:case="'policies'">Policy Studio</span>
-            <span th:case="*">City Operations</span>
-        </strong>
-    </div>
-    <div class="operations-topbar-actions">
-        <a href="/#city-map" class="topbar-map-link">⌖ <span>Operations map</span></a>
-        <a href="/complaints" class="topbar-ticket-link">☷ <span>Tickets</span></a>
-        <span class="topbar-mode"><span class="topbar-mode-dot"></span> DEMO</span>
-        <span class="top-avatar" aria-label="City Operations">SC</span>
-    </div>
 </div>
 </body>
 </html>

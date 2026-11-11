@@ -1,9 +1,149 @@
-<!DOCTYPE html><html lang="en" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Smart City Zones | SmartCity360</title><link rel="stylesheet" th:href="@{/css/app.css}"><link rel="stylesheet" th:href="@{/css/operations.css}"><script th:src="@{/js/app.js}" defer></script></head><body><div th:replace="~{fragments/navigation :: sidebar('zones')}"></div><div class="workspace"><div th:replace="~{fragments/navigation :: topbar('zones')}"></div><main class="ops-page"><div class="ops-header"><div><span class="ops-eyebrow">INFRASTRUCTURE · POWER MANAGEMENT</span><h1>Smart City Zones</h1><p>Explore city, district, street and building hierarchy with centralized energy controls.</p></div><span class="ops-demo">● Demo workspace</span></div>
-<div class="ops-stats"><section class="ops-stat"><small>Total current usage</small><strong th:text="|${totalUsage} kW|">440 kW</strong><p>Powered infrastructure</p></section><section class="ops-stat"><small>Active buildings</small><strong th:text="${activeBuildings}">5</strong><p>Buildings currently online</p></section><section class="ops-stat"><small>Control scope</small><strong>4 levels</strong><p>City · District · Street · Building</p></section></div>
-<div class="ops-panel" style="margin-bottom:20px"><h2>Infrastructure hierarchy</h2><p>Switch an individual building, a street, a district, or the entire city on or off. Parent commands cascade through their children.</p>
-<div class="ops-table-wrap"><table class="ops-table"><thead><tr><th>Infrastructure</th><th>Type</th><th>Power</th><th>Active buildings</th><th>Actions</th></tr></thead><tbody>
-<tr th:each="zone : ${zones}"><td><div th:style="|padding-left:${zone.level * 19}px|"><strong th:text="${zone.name}">City</strong></div></td><td><span class="ops-pill" th:text="${zone.type}">Building</span></td><td th:text="|${zone.usage} kW|">0 kW</td><td th:text="${zone.active}">0</td><td>
-<form th:action="@{/zones/{id}/power(id=${zone.id})}" method="post"><input type="hidden" name="on" value="true"><button class="ops-small-btn" type="submit">Power on</button></form>
-<form th:action="@{/zones/{id}/power(id=${zone.id})}" method="post"><input type="hidden" name="on" value="false"><button class="ops-small-btn danger" type="submit">Power off</button></form></td></tr></tbody></table></div></div>
-<div class="ops-note">All assets represent a local city model; actions only affect this in-memory application. <a href="/#city-map">View example locations on the map →</a></div>
-</main></div></body></html>
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smart Zones | SmartCity360</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        header {
+            background: #142d4e;
+            padding: 35px;
+            text-align: center;
+            color: white;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 20px;
+        }
+
+        .summary {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            flex: 1;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .card h2 { color: #2563eb; }
+
+        .table-box {
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th { background: #e2e8f0; }
+
+        button {
+            border: none;
+            padding: 9px 15px;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .on { background: #16a34a; }
+        .off { background: #dc2626; }
+
+        form { display: inline; }
+
+        a { color: #bfdbfe; }
+    </style>
+  <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+  <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
+</head>
+
+<body>
+<div th:replace="~{fragments/navigation :: sidebar('zones')}"></div>
+<div class="workspace">
+<header>
+    <h1>Smart City Zone Management</h1>
+    <p>City infrastructure and energy control</p>
+    <a href="/">Back to Dashboard</a>
+</header>
+
+<main>
+    <div class="summary">
+        <div class="card">
+            <h3>Total Power Usage</h3>
+            <h2 th:text="${totalUsage} + ' kW'">0 kW</h2>
+        </div>
+
+        <div class="card">
+            <h3>Active Buildings</h3>
+            <h2 th:text="${activeBuildings}">0</h2>
+        </div>
+    </div>
+
+    <div class="table-box">
+        <table>
+            <thead>
+            <tr>
+                <th>Infrastructure</th>
+                <th>Type</th>
+                <th>Power Usage</th>
+                <th>Active Buildings</th>
+                <th>Controls</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="zone : ${zones}">
+                <td>
+                    <div th:style="|padding-left:${zone.level * 18}px|">
+                        <strong th:text="${zone.name}">Zone</strong>
+                    </div>
+                </td>
+
+                <td th:text="${zone.type}">Type</td>
+                <td th:text="${zone.usage} + ' kW'">0 kW</td>
+                <td th:text="${zone.active}">0</td>
+
+                <td>
+                    <form th:action="@{/zones/{id}/power(id=${zone.id})}"
+                          method="post">
+                        <input type="hidden" name="on" value="true">
+                        <button class="on" type="submit">ON</button>
+                    </form>
+
+                    <form th:action="@{/zones/{id}/power(id=${zone.id})}"
+                          method="post">
+                        <input type="hidden" name="on" value="false">
+                        <button class="off" type="submit">OFF</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</div>
+</body>
+</html>
