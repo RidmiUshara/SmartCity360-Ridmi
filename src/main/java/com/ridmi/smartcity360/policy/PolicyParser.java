@@ -96,7 +96,7 @@ public final class PolicyParser {
             if (Character.isWhitespace(c)) { i++; continue; }
             if (Character.isLetter(c)) {
                 int start = i++;
-                while (i < source.length() && Character.isLetter(source.charAt(i))) i++;
+                while (i < source.length() && (Character.isLetter(source.charAt(i)) || source.charAt(i) == '_')) i++;
                 tokens.add(source.substring(start, i));
                 continue;
             }
