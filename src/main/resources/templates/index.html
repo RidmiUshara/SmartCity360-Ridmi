@@ -1,192 +1,158 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Overview | SmartCity360</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
-    <script th:src="@{/js/app.js}" src="/js/app.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | SmartCity360</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+  <link rel="stylesheet" th:href="@{/css/top-navigation.css}" href="/css/top-navigation.css">
+  <link rel="stylesheet" th:href="@{/css/analytics-dashboard.css}" href="/css/analytics-dashboard.css">
+  <script th:src="@{/js/theme.js}" src="/js/theme.js" defer></script>
 </head>
 <body>
-<div th:replace="~{fragments/navigation :: sidebar('dashboard')}"></div>
-<div class="workspace">
-    <div class="page-topbar"><span>SmartCity360 <span style="color:#bdc8d5">/</span> <strong>Overview</strong></span>
-        <div class="topbar-right"><span>City Management Console</span><span class="top-avatar">R</span></div>
-    </div>
-    <main class="dashboard-content">
-        <div class="page-header">
-            <div><span class="eyebrow">CITY OPERATIONS / COMMAND CENTER</span>
-                <h1>City overview</h1>
-                <p>Infrastructure, energy and city services — all in one place.</p>
-            </div>
-            <div class="header-actions"><span class="live-tag">Demo environment</span></div>
+  <div th:replace="~{fragments/navigation :: sidebar('dashboard')}"></div>
+  <div class="workspace analytics-workspace">
+    <main class="analytics-dashboard">
+      <header class="analytics-header">
+        <div>
+          <span class="analytics-eyebrow"><span class="eyebrow-star">✦</span> SMARTCITY360 / CONTROL CENTER</span>
+          <h1>City performance overview</h1>
+          <p>Everything happening across your connected city, in one view.</p>
         </div>
-        <section class="city-hero" aria-label="City operations welcome">
-            <img class="city-hero-photo" src="https://images.unsplash.com/photo-1764866208339-b096c5b21a95?auto=format&amp;fit=crop&amp;w=1600&amp;q=80" alt="Modern city skyline illuminated at dusk" width="1600" height="900" fetchpriority="high">
-            <div class="city-hero-shade" aria-hidden="true"></div>
-            <div class="city-hero-content">
-                <span class="hero-kicker"><span class="hero-kicker-dot"></span> YOUR CITY, IN FOCUS</span>
-                <h2>Connected city.<br>Smarter decisions.</h2>
-                <p>One intelligent workspace to manage infrastructure, energy, public services and urban policies.</p>
-                <div class="hero-actions">
-                    <a class="hero-primary" href="/zones">Explore city zones <span aria-hidden="true">↗</span></a>
-                    <a class="hero-secondary" href="#system-modules">Browse system modules <span aria-hidden="true">↓</span></a>
-                </div>
-            </div>
-            <a class="hero-photo-credit" href="https://unsplash.com/photos/modern-cityscape-with-illuminated-skyscrapers-at-dusk-rVHfR6eea40" target="_blank" rel="noopener noreferrer">Photo: Alim / Unsplash</a>
+        <div class="analytics-header-right">
+          <span class="analytics-session"><span class="session-light"></span> Local simulation</span>
+          <a href="/zones" class="analytics-view-link">Manage infrastructure <span aria-hidden="true">↗</span></a>
+        </div>
+      </header>
+
+      <div class="analytics-grid">
+        <!-- Aggregate power and active city services -->
+        <section class="analytics-card energy-focus">
+          <div class="analytics-card-heading"><div><span class="card-overline">CITY ENERGY</span><h2>Power overview</h2></div><span class="analytics-card-symbol" aria-hidden="true">ϟ</span></div>
+          <p class="power-label">Current consumption</p>
+          <div class="power-total"><strong th:text="${totalUsage}">440</strong><span>kW</span></div>
+          <div class="power-divider"></div>
+          <div class="progress-heading"><span>Buildings online</span><strong th:text="|${activeBuildings} / ${totalBuildings}|">5 / 5</strong></div>
+          <div class="power-progress" role="progressbar" aria-label="Active buildings percentage" aria-valuemin="0" aria-valuemax="100" th:attr="aria-valuenow=${totalBuildings == 0 ? 0 : activeBuildings * 100 / totalBuildings}">
+            <span th:style="|width:${totalBuildings == 0 ? 0 : activeBuildings * 100.0 / totalBuildings}%|"></span>
+          </div>
+          <div class="power-details">
+            <div><span class="power-mark teal"></span><span>Running</span><strong th:text="${activeBuildings}">5</strong></div>
+            <div><span class="power-mark blue"></span><span>Offline</span><strong th:text="${totalBuildings - activeBuildings}">0</strong></div>
+          </div>
+          <a href="/zones" class="power-action">View zone controls <span aria-hidden="true">↗</span></a>
         </section>
-        <div class="metric-grid">
-            <section class="metric-card">
-                <div class="metric-top"><span>Energy consumption</span><span class="metric-icon">ϟ</span></div>
-                <div class="metric-number"><span th:text="${totalUsage}">440</span> <small>kW</small></div>
-                <div class="metric-caption">Current modeled building usage</div>
-            </section>
-            <section class="metric-card">
-                <div class="metric-top"><span>Active buildings</span><span class="metric-icon teal">▤</span></div>
-                <div class="metric-number"><span th:text="${activeBuildings}">5</span> <small th:text="|/ ${totalBuildings}|">/ 5</small></div>
-                <div class="metric-caption">Powered buildings in the hierarchy</div>
-            </section>
-            <section class="metric-card">
-                <div class="metric-top"><span>Smart streetlights</span><span class="metric-icon amber">☼</span></div>
-                <div class="metric-number"><span th:text="${activeLights}">10000</span> <small th:text="|/ ${totalLights}|">/ 10000</small></div>
-                <div class="metric-caption">Lights currently powered on</div>
-            </section>
-            <section class="metric-card">
-                <div class="metric-top"><span>Citizen complaints</span><span class="metric-icon purple">☷</span></div>
-                <div class="metric-number" th:text="${complaintCount}">0</div>
-                <div class="metric-caption">Complaints submitted this session</div>
-            </section>
-        </div>
-        <section class="system-modules" id="system-modules" aria-labelledby="system-modules-title">
-            <div class="module-section-head">
-                <div>
-                    <span class="eyebrow">ONE CONNECTED WORKSPACE</span>
-                    <h2 id="system-modules-title">System modules</h2>
-                    <p>Everything you need to monitor and manage daily city operations.</p>
+
+        <!-- Real data (not invented time-series values) -->
+        <section class="analytics-card district-panel">
+          <div class="analytics-card-heading"><div><span class="card-overline">INFRASTRUCTURE ANALYTICS</span><h2>Energy by district</h2></div><a href="/zones" class="mini-link">See zones ↗</a></div>
+          <p class="panel-description">Live distribution of current modeled consumption</p>
+          <div class="district-visual">
+            <div class="district-gridlines" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+            <div class="district-columns">
+              <div class="district-column" th:each="district,iter : ${districts}">
+                <span class="district-value" th:text="|${district.usageKw} kW|">270 kW</span>
+                <div class="district-column-track">
+                  <div class="district-column-bar" th:classappend="${iter.odd} ? ' alternate' : ''"
+                    th:style="|height:${district.percent}%|"></div>
                 </div>
-                <span class="module-count"><span class="count-dot"></span> 05 available workspaces</span>
+                <span class="district-name" th:text="${district.name}">North District</span>
+              </div>
             </div>
-            <div class="hub-grid">
-                <a class="hub-featured" href="/zones" aria-label="Open Smart Zones workspace">
-                    <div class="hub-featured-top">
-                        <span class="hub-featured-icon"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="7" height="13" rx="1.5"/><rect x="10" y="3" width="11" height="18" rx="1.5"/><path d="M6.5 12h.01M6.5 16h.01M14 8h3M14 12h3M14 16h3M2 21h20"/></svg></span>
-                        <span class="hub-featured-label">CITY INFRASTRUCTURE</span>
-                    </div>
-                    <div class="hub-city-art" aria-hidden="true">
-                        <span class="art-ring art-ring-one"></span>
-                        <span class="art-ring art-ring-two"></span>
-                        <span class="art-grid"></span>
-                        <span class="art-building art-b1"></span>
-                        <span class="art-building art-b2"></span>
-                        <span class="art-building art-b3"></span>
-                        <span class="art-building art-b4"></span>
-                    </div>
-                    <div class="hub-featured-body">
-                        <span class="hub-kicker"><span class="hub-online-dot"></span> CITY OPERATIONS</span>
-                        <h3>Smart zones</h3>
-                        <p>Take control of the city hierarchy — from districts and streets down to individual buildings.</p>
-                        <div class="hub-featured-metric"><strong th:text="${activeBuildings}">5</strong> <span>buildings powered on</span></div>
-                        <span class="hub-featured-action">Open workspace <span aria-hidden="true">↗</span></span>
-                    </div>
-                </a>
-                <div class="hub-tiles">
-                    <a class="hub-tile hub-energy" href="/energy" aria-label="Open Energy Security workspace">
-                        <div class="hub-tile-top"><span class="hub-tile-icon"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13.5 2-9 11h7l-1 9 9-12h-7z"/></svg></span><span class="hub-tile-arrow" aria-hidden="true">↗</span></div>
-                        <span class="hub-tile-category">ENERGY NETWORK</span>
-                        <h3>Energy security</h3>
-                        <p>Protect energy meter readings with configurable security and data processing.</p>
-                        <div class="hub-tile-footer"><span class="hub-tile-value"><strong th:text="${totalUsage}">440</strong> kW</span><span class="hub-tile-open">Explore <span aria-hidden="true">→</span></span></div>
-                    </a>
-                    <a class="hub-tile hub-complaints" href="/complaints" aria-label="Open Citizen Complaints workspace">
-                        <div class="hub-tile-top"><span class="hub-tile-icon"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5c-1.1 0-2.3-.3-3.2-.7L4 20l1.5-4.7A7.5 7.5 0 1 1 20 11.5Z"/><path d="M12.5 8.5v4M12.5 15h.01"/></svg></span><span class="hub-tile-arrow" aria-hidden="true">↗</span></div>
-                        <span class="hub-tile-category">PUBLIC SERVICES</span>
-                        <h3>Citizen complaints</h3>
-                        <p>Receive community reports and route urgent issues to the right teams.</p>
-                        <div class="hub-tile-footer"><span class="hub-tile-value"><strong th:text="${complaintCount}">0</strong> submitted</span><span class="hub-tile-open">Explore <span aria-hidden="true">→</span></span></div>
-                    </a>
-                    <a class="hub-tile hub-lights" href="/lights" aria-label="Open Street Lighting workspace">
-                        <div class="hub-tile-top"><span class="hub-tile-icon"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M8.7 14.5a6 6 0 1 1 6.6 0L14 18h-4l-1.3-3.5z"/><path d="M12 2V1M4 8H3M21 8h-1M6.2 3.7l-.7-.7M17.8 3.7l.7-.7"/></svg></span><span class="hub-tile-arrow" aria-hidden="true">↗</span></div>
-                        <span class="hub-tile-category">LIGHTING NETWORK</span>
-                        <h3>Street lighting</h3>
-                        <p>Monitor the lighting network and manage each streetlight independently.</p>
-                        <div class="hub-tile-footer"><span class="hub-tile-value"><strong th:text="${activeLights}">10000</strong> online</span><span class="hub-tile-open">Explore <span aria-hidden="true">→</span></span></div>
-                    </a>
-                    <a class="hub-tile hub-policies" href="/policies" aria-label="Open City Policy Studio workspace">
-                        <div class="hub-tile-top"><span class="hub-tile-icon"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 14h8M11 7v4M15 12v4"/></svg></span><span class="hub-tile-arrow" aria-hidden="true">↗</span></div>
-                        <span class="hub-tile-category">URBAN AUTOMATION</span>
-                        <h3>Policy studio</h3>
-                        <p>Create smart rules and evaluate city sensor readings in one place.</p>
-                        <div class="hub-tile-footer"><span class="hub-tile-value"><strong th:text="${policyCount}">3</strong> rules</span><span class="hub-tile-open">Explore <span aria-hidden="true">→</span></span></div>
-                    </a>
-                </div>
-            </div>
+          </div>
+          <div class="district-bottom">
+            <span><i class="key-cyan"></i> Current consumption</span>
+            <strong th:text="|Total: ${totalUsage} kW|">Total: 440 kW</strong>
+          </div>
         </section>
-        <div class="dashboard-grid">
-            <section class="panel-modern">
-                <div class="panel-heading"><div><h2>Energy distribution</h2><p>Current consumption by district · updates after power changes</p></div><a href="/zones" class="panel-link">Manage zones →</a></div>
-                <div class="chart-rows">
-                    <div th:each="district,stat : ${districts}">
-                        <div class="chart-row-top"><span th:text="${district.name}">North District</span><b th:text="|${district.usageKw} kW|">270 kW</b></div>
-                        <div class="bar-track"><div class="bar-fill" th:classappend="${stat.odd} ? ' secondary' : ''" th:style="|width:${district.percent}%|"></div></div>
-                    </div>
-                </div>
-                <div class="legend-row"><span class="legend-dot"></span> Share of current city energy usage</div>
-                <p class="muted-note" th:if="${totalUsage == 0}">All modeled buildings are currently switched off.</p>
-            </section>
-            <section class="panel-modern">
-                <div class="panel-heading"><div><h2>Streetlight availability</h2><p>Current ON/OFF distribution</p></div><a href="/lights" class="panel-link">View lights →</a></div>
-                <div class="donut-wrap">
-                    <div class="donut" th:style="|--active:${activePercent}%|" role="img" th:attr="aria-label=|Streetlights active: ${activePercent}%|">
-                        <div class="donut-center"><strong th:text="|${#numbers.formatDecimal(activePercent,1,1)}%|">100.0%</strong><small>Operating</small></div>
-                    </div>
-                    <div class="donut-legend">
-                        <div><span class="legend-dot alt" style="display:inline-block;margin-right:8px"></span> ON <b th:text="${activeLights}">10000</b></div>
-                        <div><span class="legend-dot" style="display:inline-block;background:#e7edf4;margin-right:8px"></span> OFF <b th:text="${inactiveLights}">0</b></div>
-                        <div><span style="color:#64748b">Shared profiles</span><b th:text="${sharedProfiles}">3</b></div>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <div class="dashboard-grid">
-            <section class="panel-modern">
-                <div class="panel-heading"><div><h2>Complaint severity</h2><p>Distribution of complaints submitted this session</p></div><a href="/complaints" class="panel-link">View complaints →</a></div>
-                <div class="complaint-bars">
-                    <div class="complaint-line" th:each="item : ${severities}">
-                        <span th:text="${item.name}">LOW</span>
-                        <div class="bar-track"><div class="bar-fill" th:style="|width:${item.percent}%|"></div></div>
-                        <strong th:text="${item.count}">0</strong>
-                    </div>
-                </div>
-                <p class="muted-note" th:if="${complaintCount == 0}">No complaints recorded yet. Submit a complaint to populate this chart.</p>
-            </section>
-            <section class="panel-modern">
-                <div class="panel-heading"><div><h2>Platform status</h2><p>Connected operations across the city</p></div></div>
-                <div style="display:grid;gap:16px">
-                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>Connected service modules</span><strong>5 connected</strong></div>
-                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>City policy rules</span><strong th:text="${policyCount}">3</strong></div>
-                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>Simulated streetlight configurations</span><strong th:text="${sharedProfiles}">3</strong></div>
-                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>Data persistence</span><strong style="color:#b97715">In-memory demo</strong></div>
-                </div>
-            </section>
-        </div>
-        <div class="bottom-row">
-            <section class="panel-modern">
-                <div class="panel-heading"><div><h2>Recent complaints</h2><p>Most recently submitted records</p></div><a href="/complaints" class="panel-link">All complaints →</a></div>
-                <div class="empty-state" th:if="${#lists.isEmpty(recentComplaints)}">No citizen complaints yet. Open the complaints workspace to submit a sample.</div>
-                <div class="activity-item" th:each="complaint : ${recentComplaints}">
-                    <strong th:text="${complaint.description}">Complaint</strong>
-                    <p th:text="|${complaint.location} · ${complaint.severity}|">Location</p>
-                    <small th:text="|Assigned to ${complaint.assignedTo}|">Assigned to staff</small>
-                </div>
-            </section>
-            <section class="panel-modern">
-                <div class="panel-heading"><div><h2>About this environment</h2><p>City management overview</p></div></div>
-                <p class="muted-note">Charts and metrics are based on the current city model. Refresh this page after changing a zone, submitting a complaint or toggling a streetlight to see the latest state.</p>
-                <p class="muted-note">Demo environment: data is simulated, not from live city sensors. Values reset when the application restarts.</p>
-                <a href="/policies" class="panel-link">Explore city policies →</a>
-            </section>
-        </div>
+
+        <section class="analytics-card structure-panel">
+          <div class="analytics-card-heading"><div><span class="card-overline">NETWORK STRUCTURE</span><h2>City infrastructure</h2></div><span class="analytics-card-symbol mini">▤</span></div>
+          <p class="panel-description">Powered building distribution</p>
+          <div class="structure-ring" th:style="|--ratio:${totalBuildings == 0 ? 0 : activeBuildings * 100.0 / totalBuildings}%|" role="img" th:attr="aria-label=|${activeBuildings} of ${totalBuildings} buildings powered on|">
+            <div class="structure-ring-core"><strong th:text="${activeBuildings}">5</strong><small>Online</small></div>
+          </div>
+          <div class="structure-legend"><span><i class="legend-dot-current"></i> Active</span><b th:text="${activeBuildings}">5</b></div>
+          <div class="structure-legend"><span><i class="legend-dot-muted"></i> Offline</span><b th:text="${totalBuildings - activeBuildings}">0</b></div>
+        </section>
+
+        <section class="analytics-card lighting-panel">
+          <div class="analytics-card-heading"><div><span class="card-overline">SMART INFRASTRUCTURE</span><h2>Lighting availability</h2></div><a href="/lights" class="mini-link">View network ↗</a></div>
+          <div class="lighting-layout">
+            <div class="lighting-ring" th:style="|--ratio:${activePercent}%|" role="img" th:attr="aria-label=|${activePercent}% of street lights powered on|">
+              <div class="lighting-ring-core">
+                <span>NETWORK</span>
+                <strong th:text="|${#numbers.formatDecimal(activePercent,1,1)}%|">100.0%</strong>
+                <small>Operational</small>
+              </div>
+            </div>
+            <div class="lighting-values">
+              <div><span><i class="light-key on"></i> Lights online</span><b th:text="${activeLights}">10000</b></div>
+              <div><span><i class="light-key off"></i> Lights offline</span><b th:text="${inactiveLights}">0</b></div>
+              <div><span><i class="light-key shared"></i> Shared profiles</span><b th:text="${sharedProfiles}">3</b></div>
+              <span class="lighting-caption" th:text="|${activeLights} of ${totalLights} simulated lights running|">10,000 of 10,000 running</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="analytics-card complaints-panel">
+          <div class="analytics-card-heading"><div><span class="card-overline">CITIZEN SERVICES</span><h2>Complaint priority</h2></div><a href="/complaints" class="mini-link">Open tickets ↗</a></div>
+          <div class="complaints-summary"><strong th:text="${complaintCount}">0</strong><span>Tickets submitted this session</span></div>
+          <div class="severity-rows">
+            <div class="severity-row" th:each="item,iter : ${severities}">
+              <span th:text="${item.name}">LOW</span>
+              <div class="severity-track"><div class="severity-fill" th:classappend="|severity-${iter.index}|"
+                    th:style="|width:${item.percent}%|"></div></div>
+              <b th:text="${item.count}">0</b>
+            </div>
+          </div>
+          <p class="complaint-note" th:if="${complaintCount == 0}">No reports yet. New tickets appear here automatically.</p>
+        </section>
+
+        <section class="analytics-card policies-panel">
+          <div class="analytics-card-heading"><div><span class="card-overline">CITY AUTOMATION</span><h2>Policy studio</h2></div><span class="analytics-card-symbol mini">◇</span></div>
+          <div class="policy-total"><strong th:text="${policyCount}">3</strong><span>Saved policy rules</span></div>
+          <div class="policy-lines">
+            <span><i></i> Noise monitoring</span>
+            <span><i></i> Parking conditions</span>
+            <span><i></i> City occupancy</span>
+          </div>
+          <a class="policy-action" href="/policies">Open rule manager <span aria-hidden="true">↗</span></a>
+        </section>
+
+        <section class="analytics-card modules-panel" id="system-modules">
+          <div class="analytics-card-heading"><div><span class="card-overline">WORKSPACE</span><h2>System modules</h2></div><span class="panel-description">Quick access to city services</span></div>
+          <div class="module-shortcuts">
+            <a href="/energy"><span class="shortcut-icon">ϟ</span><span><strong>Energy security</strong><small>Protect meter data</small></span><b aria-hidden="true">↗</b></a>
+            <a href="/zones"><span class="shortcut-icon">▤</span><span><strong>Smart zones</strong><small>Manage power usage</small></span><b aria-hidden="true">↗</b></a>
+            <a href="/complaints"><span class="shortcut-icon">☷</span><span><strong>Complaints</strong><small>Service tickets</small></span><b aria-hidden="true">↗</b></a>
+            <a href="/lights"><span class="shortcut-icon">☼</span><span><strong>Street lights</strong><small>Lighting network</small></span><b aria-hidden="true">↗</b></a>
+            <a href="/policies"><span class="shortcut-icon">◇</span><span><strong>Policy studio</strong><small>City policy rules</small></span><b aria-hidden="true">↗</b></a>
+          </div>
+        </section>
+
+        <section class="analytics-card recent-panel">
+          <div class="analytics-card-heading"><div><span class="card-overline">SERVICE DESK</span><h2>Recent complaints</h2></div><a href="/complaints" class="mini-link">All tickets ↗</a></div>
+          <div class="recent-empty" th:if="${#lists.isEmpty(recentComplaints)}">
+            <span class="recent-empty-icon">☷</span>
+            <strong>All clear</strong>
+            <p>Reports submitted by citizens will show up in this panel.</p>
+          </div>
+          <div class="recent-entry" th:each="complaint : ${recentComplaints}">
+            <span class="recent-status"></span>
+            <div><strong th:text="${complaint.description}">Street light issue</strong>
+              <small th:text="|${complaint.location} · ${complaint.severity}|">Zone 1 · LOW</small></div>
+            <span class="recent-assignee" th:text="${complaint.assignedTo}">Local Staff</span>
+          </div>
+          <div class="city-postcard">
+            <img src="https://images.unsplash.com/photo-1764866208339-b096c5b21a95?auto=format&amp;fit=crop&amp;w=1000&amp;q=70"
+                 alt="City skyline at dusk" loading="lazy">
+            <span>One connected city. <b>Smarter operations.</b></span>
+          </div>
+        </section>
+      </div>
+      <p class="dashboard-disclaimer">SmartCity360 demo environment · All metrics use current simulated application data. Historical trend data is not available. Changes reset when the app restarts.</p>
     </main>
-</div>
+  </div>
 </body>
 </html>
